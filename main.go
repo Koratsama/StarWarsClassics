@@ -12,27 +12,26 @@ import (
 func main() {
 
 	var shutdown bool = false
-
+	fmt.Println("\nWelcome to Star Wars Classics!")
 	for !shutdown {
 		var choice string
 
-		fmt.Println("Welcome to Star Wars Classics!" +
-			"\n1. Dejarik\n2. Pazaak\n3. Sabacc" +
+		fmt.Println("\n1. Dejarik\n2. Pazaak\n3. Sabacc" +
 			"\nPlease select a game to launch:")
 
 		fmt.Scanf("%s\n", &choice)
 
 		switch choice {
 		case "1", "Dejarik", "dejarik":
-			fmt.Println("Thank you for choosing Dejarik!" +
+			fmt.Println("\nThank you for choosing Dejarik!" +
 				"\n... unfortunately this game is not available at this time." +
 				"\nPlease choose another.")
 		case "2", "Pazaak", "pazaak":
-			fmt.Println("Thank you for choosing Pazaak!" +
+			fmt.Println("\nThank you for choosing Pazaak!" +
 				"\n... unfortunately this game is not available at this time." +
 				"\nPlease choose another.")
 		case "3", "Sabacc", "sabacc":
-			fmt.Println("Thank you for choosing Sabacc!" +
+			fmt.Println("\nThank you for choosing Sabacc!" +
 				"\n... unfortunately this game is not available at this time." +
 				"\nPlease choose another.")
 		case "q", "quit":
