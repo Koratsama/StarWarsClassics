@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -10,6 +12,14 @@ import (
 
 //main method of star wars classics
 func main() {
+
+	content, err := ioutil.ReadFile("/Users/koratsama/Documents/Projects/StarWarsClassics/ascii/StarWarsClassic.txt")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(string(content))
 
 	var shutdown bool = false
 	fmt.Println("\nWelcome to Star Wars Classics!")
