@@ -14,10 +14,39 @@ func main() {
 	var shutdown bool = false
 
 	for !shutdown {
+		var choice string
 
-		time.Sleep(10 * time.Second)
-		shutdown = true
+		fmt.Println("Welcome to Star Wars Classics!" +
+			"\n1. Dejarik\n2. Pazaak\n3. Sabacc" +
+			"\nPlease select a game to launch:")
+
+		fmt.Scanf("%s\n", &choice)
+
+		switch choice {
+		case "1", "Dejarik", "dejarik":
+			fmt.Println("Thank you for choosing Dejarik!" +
+				"\n... unfortunately this game is not available at this time." +
+				"\nPlease choose another.")
+		case "2", "Pazaak", "pazaak":
+			fmt.Println("Thank you for choosing Pazaak!" +
+				"\n... unfortunately this game is not available at this time." +
+				"\nPlease choose another.")
+		case "3", "Sabacc", "sabacc":
+			fmt.Println("Thank you for choosing Sabacc!" +
+				"\n... unfortunately this game is not available at this time." +
+				"\nPlease choose another.")
+		case "q", "quit":
+			fmt.Println("May the force be with you...")
+			time.Sleep(1 * time.Second)
+			fmt.Println("always")
+			shutdown = true
+		default:
+			fmt.Println("Invalid option. Please choose again.")
+		}
+
 	}
+
+	os.Exit(0)
 
 	go gracefulShutdown()
 	forever := make(chan int)
