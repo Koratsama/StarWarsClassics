@@ -1,3 +1,3 @@
-module deck
+module github.com/Koratsama/StarWarsClassics
 
 go 1.17

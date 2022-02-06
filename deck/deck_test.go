@@ -1,9 +1,10 @@
 package deck_test
 
 import (
-	"deck/deck"
 	"fmt"
 	"testing"
+
+	"github.com/Koratsama/StarWarsClassics/deck"
 )
 
 func TestSabaccDeckInitialization(t *testing.T) {
