@@ -72,9 +72,6 @@ func makeSabaccDeck(deck Deck) Deck {
 	deck.Cards = append(deck.Cards, Card{Stave: "Sylop", Value: 0})
 	deck.Cards = append(deck.Cards, Card{Stave: "Sylop", Value: 0})
 	fmt.Printf("\nSabacc deck initialized with %v cards", len(deck.Cards))
-	for _, card := range deck.Cards {
-		fmt.Printf("\n"+card.Stave+" %v", card.Value)
-	}
 
 	return deck
 }
