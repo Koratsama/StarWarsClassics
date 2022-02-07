@@ -10,7 +10,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Koratsama/StarWarsClassics/menu/menu"
+	"github.com/Koratsama/StarWarsClassics/menu"
 )
 
 //main method of star wars classics
