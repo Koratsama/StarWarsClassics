@@ -6,60 +6,33 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"syscall"
 	"time"
+
+	"github.com/Koratsama/StarWarsClassics/menu"
 )
 
 //main method of star wars classics
 func main() {
 
-	content, err := ioutil.ReadFile("/Users/koratsama/Documents/Projects/StarWarsClassics/ascii/StarWarsClassic.txt")
+	absPath, _ := filepath.Abs("../StarWarsClassics/ascii/StarWarsClassic.txt")
+	content, err := ioutil.ReadFile(absPath)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	fmt.Println(string(content))
-
-	var shutdown bool = false
 	fmt.Println("\nWelcome to Star Wars Classics!")
-	for !shutdown {
-		var choice string
 
-		fmt.Println("\n1. Dejarik\n2. Pazaak\n3. Sabacc\n4. quit" +
-			"\nPlease select a game to launch:")
+	var shutdown bool = menu.Start()
 
-		fmt.Scanf("%s\n", &choice)
-
-		switch choice {
-		case "1", "Dejarik", "dejarik":
-			fmt.Println("\nThank you for choosing Dejarik!" +
-				"\n... unfortunately this game is not available at this time." +
-				"\nPlease choose another.")
-		case "2", "Pazaak", "pazaak":
-			fmt.Println("\nThank you for choosing Pazaak!" +
-				"\n... unfortunately this game is not available at this time." +
-				"\nPlease choose another.")
-		case "3", "Sabacc", "sabacc":
-			fmt.Println("\nThank you for choosing Sabacc!" +
-				"\n... unfortunately this game is not available at this time." +
-				"\nPlease choose another.")
-		case "4", "q", "Q", "quit", "Quit":
-			fmt.Println("May the force be with you...")
-			time.Sleep(1 * time.Second)
-			fmt.Println("always")
-			shutdown = true
-		default:
-			fmt.Println("Invalid option. Please choose again.")
-		}
-
+	if shutdown {
+		go gracefulShutdown()
+		forever := make(chan int)
+		<-forever
 	}
-
-	os.Exit(0)
-
-	go gracefulShutdown()
-	forever := make(chan int)
-	<-forever
 }
 
 func gracefulShutdown() {
