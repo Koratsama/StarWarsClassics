@@ -15,6 +15,21 @@ type Card struct {
 	Value int
 }
 
+func (re *Deck) Deal(numOfCards int) []Card {
+	cardsToDeal := []Card{}
+
+	for i := 0; i < numOfCards; i++ {
+		cardsToDeal = append(cardsToDeal, re.Cards[0])
+		re.Cards = re.RemoveTopCard()
+	}
+
+	return cardsToDeal
+}
+
+func (re *Deck) RemoveTopCard() []Card {
+	return append(re.Cards[:0], re.Cards[1:]...)
+}
+
 func InitializeDeck(deckType string) Deck {
 	//initialize the deck of cards based on game type selected
 	deck := Deck{}
@@ -23,13 +38,14 @@ func InitializeDeck(deckType string) Deck {
 	case "Pazaak":
 		fmt.Println("\nInitializing Pazaak deck...")
 		time.Sleep(3 * time.Second)
-		makePazaakDeck(deck)
+		fmt.Println("\nSorry, Pazaak is unavailable at this time.")
+		//makePazaakDeck(deck)
 	case "Sabacc":
 		fmt.Println("\nInitializing Sabacc deck...")
 		time.Sleep(3 * time.Second)
 		deck = makeSabaccDeck(deck)
 	default:
-		fmt.Println("Invalid option. game does not require a deck")
+		fmt.Println("Invalid option. game does not require a deck.")
 	}
 
 	return deck
@@ -71,11 +87,12 @@ func makeSabaccDeck(deck Deck) Deck {
 	//add the two sylops (zero cards)
 	deck.Cards = append(deck.Cards, Card{Stave: "Sylop", Value: 0})
 	deck.Cards = append(deck.Cards, Card{Stave: "Sylop", Value: 0})
-	fmt.Printf("\nSabacc deck initialized with %v cards", len(deck.Cards))
+	fmt.Printf("\nSabacc deck initialized with %v cards.", len(deck.Cards))
 
 	return deck
 }
 
+/*
 func makePazaakDeck(deck Deck) {
 
-}
+}*/

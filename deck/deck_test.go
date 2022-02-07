@@ -7,12 +7,33 @@ import (
 	"github.com/Koratsama/StarWarsClassics/deck"
 )
 
-func TestSabaccDeckInitialization(t *testing.T) {
+func TestSabaccDeckInitializationHappyPath(t *testing.T) {
 	var deck = deck.InitializeDeck("Sabacc")
 
 	fmt.Printf("\nAll %v cards have been created!\n", len(deck.Cards))
 
 	if len(deck.Cards) != 62 {
+		t.Fail()
+	}
+}
+
+func TestPazaakDeckInitializationHappyPath(t *testing.T) {
+	var deck = deck.InitializeDeck("Pazaak")
+
+	//TODO: implement pazaak deck initialization and change test case
+	fmt.Printf("\nDeck size of: %v\nNo cards have been created!\n", len(deck.Cards))
+
+	if len(deck.Cards) > 0 {
+		t.Fail()
+	}
+}
+
+func TestSabaccDeckInitializationInvalidOption(t *testing.T) {
+	var deck = deck.InitializeDeck("Sabakk")
+
+	fmt.Printf("\nDeck size of: %v\nNo cards have been created!\n", len(deck.Cards))
+
+	if len(deck.Cards) > 0 {
 		t.Fail()
 	}
 }
@@ -43,6 +64,24 @@ func TestShuffleDeck(t *testing.T) {
 		}
 	}
 	if j == len(shuffledDeck.Cards)-1 {
+		t.Fail()
+	}
+}
+
+/*
+builds a sabacc deck, shuffles it and then deals 2 cards
+*/
+func TestDeal(t *testing.T) {
+	//setup initial sabacc deck
+	var initialDeck = deck.InitializeDeck("Sabacc")
+	shuffledDeck := deck.ShuffleDeck(initialDeck)
+
+	var playerHand []deck.Card = shuffledDeck.Deal(2)
+
+	fmt.Printf("\nTest deal complete! Your hand is:\n"+
+		playerHand[0].Stave+" %v,"+playerHand[1].Stave+" %v\n", playerHand[0].Value, playerHand[1].Value)
+
+	if len(playerHand) != 2 {
 		t.Fail()
 	}
 }
