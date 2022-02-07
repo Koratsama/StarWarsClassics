@@ -23,13 +23,14 @@ func InitializeDeck(deckType string) Deck {
 	case "Pazaak":
 		fmt.Println("\nInitializing Pazaak deck...")
 		time.Sleep(3 * time.Second)
-		makePazaakDeck(deck)
+		fmt.Println("\nSorry, Pazaak is unavailable at this time.")
+		//makePazaakDeck(deck)
 	case "Sabacc":
 		fmt.Println("\nInitializing Sabacc deck...")
 		time.Sleep(3 * time.Second)
 		deck = makeSabaccDeck(deck)
 	default:
-		fmt.Println("Invalid option. game does not require a deck")
+		fmt.Println("Invalid option. game does not require a deck.")
 	}
 
 	return deck
@@ -71,11 +72,12 @@ func makeSabaccDeck(deck Deck) Deck {
 	//add the two sylops (zero cards)
 	deck.Cards = append(deck.Cards, Card{Stave: "Sylop", Value: 0})
 	deck.Cards = append(deck.Cards, Card{Stave: "Sylop", Value: 0})
-	fmt.Printf("\nSabacc deck initialized with %v cards", len(deck.Cards))
+	fmt.Printf("\nSabacc deck initialized with %v cards.", len(deck.Cards))
 
 	return deck
 }
 
+/*
 func makePazaakDeck(deck Deck) {
 
-}
+}*/

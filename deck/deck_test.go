@@ -7,12 +7,33 @@ import (
 	"github.com/Koratsama/StarWarsClassics/deck"
 )
 
-func TestSabaccDeckInitialization(t *testing.T) {
+func TestSabaccDeckInitializationHappyPath(t *testing.T) {
 	var deck = deck.InitializeDeck("Sabacc")
 
 	fmt.Printf("\nAll %v cards have been created!\n", len(deck.Cards))
 
 	if len(deck.Cards) != 62 {
+		t.Fail()
+	}
+}
+
+func TestPazaakDeckInitializationHappyPath(t *testing.T) {
+	var deck = deck.InitializeDeck("Pazaak")
+
+	//TODO: implement pazaak deck initialization and change test case
+	fmt.Printf("\nDeck size of: %v\nNo cards have been created!\n", len(deck.Cards))
+
+	if len(deck.Cards) > 0 {
+		t.Fail()
+	}
+}
+
+func TestSabaccDeckInitializationInvalidOption(t *testing.T) {
+	var deck = deck.InitializeDeck("Sabakk")
+
+	fmt.Printf("\nDeck size of: %v\nNo cards have been created!\n", len(deck.Cards))
+
+	if len(deck.Cards) > 0 {
 		t.Fail()
 	}
 }
