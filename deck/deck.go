@@ -15,6 +15,21 @@ type Card struct {
 	Value int
 }
 
+func (re *Deck) Deal(numOfCards int) []Card {
+	cardsToDeal := []Card{}
+
+	for i := 0; i < numOfCards; i++ {
+		cardsToDeal = append(cardsToDeal, re.Cards[0])
+		re.Cards = re.RemoveTopCard()
+	}
+
+	return cardsToDeal
+}
+
+func (re *Deck) RemoveTopCard() []Card {
+	return append(re.Cards[:0], re.Cards[1:]...)
+}
+
 func InitializeDeck(deckType string) Deck {
 	//initialize the deck of cards based on game type selected
 	deck := Deck{}

@@ -67,3 +67,21 @@ func TestShuffleDeck(t *testing.T) {
 		t.Fail()
 	}
 }
+
+/*
+builds a sabacc deck, shuffles it and then deals 2 cards
+*/
+func TestDeal(t *testing.T) {
+	//setup initial sabacc deck
+	var initialDeck = deck.InitializeDeck("Sabacc")
+	shuffledDeck := deck.ShuffleDeck(initialDeck)
+
+	var playerHand []deck.Card = shuffledDeck.Deal(2)
+
+	fmt.Printf("\nTest deal complete! Your hand is:\n"+
+		playerHand[0].Stave+" %v,"+playerHand[1].Stave+" %v\n", playerHand[0].Value, playerHand[1].Value)
+
+	if len(playerHand) != 2 {
+		t.Fail()
+	}
+}
