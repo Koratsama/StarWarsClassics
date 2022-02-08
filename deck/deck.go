@@ -52,6 +52,8 @@ func InitializeDeck(deckType string) Deck {
 }
 
 func ShuffleDeck(deck Deck) Deck {
+	fmt.Println("\nShuffling deck...")
+	time.Sleep(3 * time.Second)
 	cards := deck.Cards
 	t := time.Now()
 	rand.Seed(int64(t.Nanosecond()))
@@ -87,7 +89,7 @@ func makeSabaccDeck(deck Deck) Deck {
 	//add the two sylops (zero cards)
 	deck.Cards = append(deck.Cards, Card{Stave: "Sylop", Value: 0})
 	deck.Cards = append(deck.Cards, Card{Stave: "Sylop", Value: 0})
-	fmt.Printf("\nSabacc deck initialized with %v cards.", len(deck.Cards))
+	fmt.Printf("\nSabacc deck initialized with %v cards.\n", len(deck.Cards))
 
 	return deck
 }
