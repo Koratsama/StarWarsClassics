@@ -7,4 +7,21 @@ type Player struct {
 	Hand     []deck.Card
 	Credits  int
 	Position int
+	Bet      int
+}
+
+func (re *Player) Discard(cardNumber int) deck.Card {
+	var DiscardCard deck.Card = re.Hand[cardNumber-1]
+
+	if cardNumber == len(re.Hand) {
+		re.Hand = re.RemoveLastCard()
+	} else {
+		re.Hand = append(re.Hand[:cardNumber-1], re.Hand[cardNumber:]...)
+	}
+
+	return DiscardCard
+}
+
+func (re *Player) RemoveLastCard() []deck.Card {
+	return re.Hand[:len(re.Hand)-1]
 }

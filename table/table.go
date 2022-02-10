@@ -10,10 +10,11 @@ import (
 )
 
 type Table struct {
-	SabaccDeck deck.Deck
-	Players    []player.Player
-	MainPot    int
-	SabaccPot  int
+	SabaccDeck  deck.Deck
+	DiscardPile []deck.Card
+	Players     []player.Player
+	MainPot     int
+	SabaccPot   int
 }
 
 func (re *Table) SeatPlayers() {
@@ -34,4 +35,10 @@ func (re *Table) DealPlayers() {
 		player.Hand[0] = hand[0]
 		player.Hand[1] = hand[1]
 	}
+}
+
+func (re *Table) InitializeDiscardPile() {
+	time.Sleep(1 * time.Second)
+	re.DiscardPile = append(re.DiscardPile, re.SabaccDeck.Deal(1)...)
+	//fmt.Printf("\nStarting a Disard Pile with: %v", re.DiscardPile)
 }
