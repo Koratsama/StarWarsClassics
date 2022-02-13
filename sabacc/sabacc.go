@@ -13,13 +13,8 @@ import (
 func Start() {
 
 	var gameOver bool = false
-	fmt.Println("Setting up a table...")
-	time.Sleep(3 * time.Second)
 	table := table.Table{}
-	table.SabaccDeck = deck.ShuffleDeck(deck.InitializeDeck("Sabacc"))
-	table.SeatPlayers()
-	table.DealPlayers()
-	table.InitializeDiscardPile()
+	SetupTable(&table)
 
 	for !gameOver {
 
@@ -56,23 +51,11 @@ func Action(table *table.Table, player *player.Player) {
 
 		switch choice {
 		case "1", "Gain", "gain":
-			player.Hand = append(player.Hand, table.SabaccDeck.Deal(1)...)
-
-			//TODO: don't make this a coin flip
-			if rand.Intn(2) == 1 {
-				table.DiscardPile = append(table.DiscardPile, player.Discard(len(player.Hand)))
-			}
+			Gain(table, player)
 		case "2", "Discard", "discard":
-			table.DiscardPile = append(table.DiscardPile, player.Discard(rand.Intn(len(player.Hand)-1)+1))
-
-			player.Hand = append(player.Hand, table.SabaccDeck.Deal(1)...)
-
+			Discard(table, player)
 		case "3", "Swap", "swap":
-			var swappedCard = table.DiscardPile[len(table.DiscardPile)-1]
-			table.DiscardPile = table.DiscardPile[:len(table.DiscardPile)-1]
-			table.DiscardPile = append(table.DiscardPile, player.Discard(rand.Intn(len(player.Hand)-1)+1))
-			player.Hand = append(player.Hand, swappedCard)
-
+			Swap(table, player)
 		case "4", "Stand", "stand":
 			//do nothing
 		default:
@@ -112,4 +95,35 @@ func Bet(table *table.Table, player *player.Player) {
 			endBet = false
 		}
 	}
+}
+
+func SetupTable(table *table.Table) {
+	fmt.Println("Setting up a table...")
+	time.Sleep(1 * time.Second)
+	table.SabaccDeck = deck.ShuffleDeck(deck.InitializeDeck("Sabacc"))
+	table.SeatPlayers()
+	table.DealPlayers()
+	table.InitializeDiscardPile()
+}
+
+func Gain(table *table.Table, player *player.Player) {
+	player.Hand = append(player.Hand, table.SabaccDeck.Deal(1)...)
+
+	//TODO: don't make this a coin flip
+	if rand.Intn(2) == 1 {
+		table.DiscardPile = append(table.DiscardPile, player.Discard(len(player.Hand)))
+	}
+}
+
+func Discard(table *table.Table, player *player.Player) {
+	table.DiscardPile = append(table.DiscardPile, player.Discard(rand.Intn(len(player.Hand)-1)+1))
+
+	player.Hand = append(player.Hand, table.SabaccDeck.Deal(1)...)
+}
+
+func Swap(table *table.Table, player *player.Player) {
+	var swappedCard = table.DiscardPile[len(table.DiscardPile)-1]
+	table.DiscardPile = table.DiscardPile[:len(table.DiscardPile)-1]
+	table.DiscardPile = append(table.DiscardPile, player.Discard(rand.Intn(len(player.Hand)-1)+1))
+	player.Hand = append(player.Hand, swappedCard)
 }

@@ -42,7 +42,7 @@ func InitializeDeck(deckType string) Deck {
 		//makePazaakDeck(deck)
 	case "Sabacc":
 		fmt.Println("\nInitializing Sabacc deck...")
-		time.Sleep(3 * time.Second)
+		time.Sleep(1 * time.Second)
 		deck = makeSabaccDeck(deck)
 	default:
 		fmt.Println("Invalid option. game does not require a deck.")
@@ -53,7 +53,7 @@ func InitializeDeck(deckType string) Deck {
 
 func ShuffleDeck(deck Deck) Deck {
 	fmt.Println("\nShuffling deck...")
-	time.Sleep(3 * time.Second)
+	time.Sleep(1 * time.Second)
 	cards := deck.Cards
 	t := time.Now()
 	rand.Seed(int64(t.Nanosecond()))
