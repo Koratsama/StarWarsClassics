@@ -97,3 +97,24 @@ func TestSwap(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestFold(t *testing.T) {
+	table := table.Table{}
+	sabacc.SetupTable(&table)
+
+	var testPlayer = table.Players[0]
+	fmt.Printf("\n%v's hand is: %v\n", testPlayer.Name, testPlayer.Hand)
+	sabacc.Fold(&table, &testPlayer)
+
+	if len(testPlayer.Hand) != 0 {
+		fmt.Println("The test player did not fold all their cards.")
+		fmt.Printf("\n%v's hand after folding is: %v\n", testPlayer.Name, testPlayer.Hand)
+		t.Fail()
+	}
+
+	if len(table.DiscardPile) != 3 {
+		fmt.Println("player did not fold their cards into the discard pile.")
+		fmt.Printf("\nDiscard pile: %v\n", table.DiscardPile)
+		t.Fail()
+	}
+}

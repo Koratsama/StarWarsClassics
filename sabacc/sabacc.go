@@ -66,7 +66,7 @@ func Action(table *table.Table, player *player.Player) {
 
 }
 
-func Bet(table *table.Table, player *player.Player) {
+func BetAction(table *table.Table, player *player.Player) {
 
 	var endBet bool = false
 	for !endBet {
@@ -83,13 +83,10 @@ func Bet(table *table.Table, player *player.Player) {
 		switch choice {
 		case "1", "Bet", "bet":
 
-			fmt.Println("\nPlease select an amount to bet:")
-
-			fmt.Scanf("%s\n", &choice)
 		case "2", "Check", "check":
 
 		case "3", "Fold", "fold":
-
+			Fold(table, player)
 		default:
 			fmt.Println("Invalid option. Please choose again.")
 			endBet = false
@@ -126,4 +123,19 @@ func Swap(table *table.Table, player *player.Player) {
 	table.DiscardPile = table.DiscardPile[:len(table.DiscardPile)-1]
 	table.DiscardPile = append(table.DiscardPile, player.Discard(rand.Intn(len(player.Hand)-1)+1))
 	player.Hand = append(player.Hand, swappedCard)
+}
+
+func Bet(table *table.Table, player *player.Player) {
+	fmt.Println("\nPlease select an amount to bet:")
+	var bet int
+	fmt.Scanf("%s\n", &bet)
+}
+
+func Check(table *table.Table, player *player.Player) {
+
+}
+
+func Fold(table *table.Table, player *player.Player) {
+	//discard all cards in the hand
+	table.DiscardPile = append(table.DiscardPile, player.FoldHand()...)
 }

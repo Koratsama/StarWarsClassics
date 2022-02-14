@@ -22,6 +22,12 @@ func (re *Player) Discard(cardNumber int) deck.Card {
 	return DiscardCard
 }
 
+func (re *Player) FoldHand() []deck.Card {
+	var discardHand []deck.Card = re.Hand
+	re.Hand = make([]deck.Card, 0)
+	return discardHand
+}
+
 func (re *Player) RemoveLastCard() []deck.Card {
 	return re.Hand[:len(re.Hand)-1]
 }
