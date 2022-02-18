@@ -2,6 +2,9 @@ package sabacc_test
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
 	"testing"
 
 	"github.com/Koratsama/StarWarsClassics/sabacc"
@@ -11,7 +14,7 @@ import (
 func TestSabaccStart(t *testing.T) {
 
 	//TODO: actually test user input for the Sabacc games
-	fmt.Printf("test Okay!")
+	fmt.Println("test Okay!")
 }
 
 func TestSetupTable(t *testing.T) {
@@ -116,5 +119,94 @@ func TestFold(t *testing.T) {
 		fmt.Println("player did not fold their cards into the discard pile.")
 		fmt.Printf("\nDiscard pile: %v\n", table.DiscardPile)
 		t.Fail()
+	}
+}
+
+func TestBetHappyPath(t *testing.T) {
+	content := []byte("30")
+	tmpfile, err := ioutil.TempFile("", "tempfile")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer os.Remove(tmpfile.Name()) // clean up
+
+	if _, err := tmpfile.Write(content); err != nil {
+		log.Fatal(err)
+	}
+
+	if _, err := tmpfile.Seek(0, 0); err != nil {
+		log.Fatal(err)
+	}
+
+	oldStdin := os.Stdin
+	defer func() { os.Stdin = oldStdin }() // Restore original Stdin
+
+	os.Stdin = tmpfile
+
+	table := table.Table{}
+	sabacc.SetupTable(&table)
+
+	var testPlayer = table.Players[0]
+	fmt.Printf("\n%v's hand is: %v\n", testPlayer.Name, testPlayer.Hand)
+	var endBet = sabacc.Bet(&table, &testPlayer)
+
+	if testPlayer.Bet == 0 {
+		fmt.Println("The test player did not bet.")
+		fmt.Printf("%v's bet is: %v\n", testPlayer.Name, testPlayer.Bet)
+		t.Fail()
+	}
+
+	if table.MainPot == 0 {
+		fmt.Println("player did not bet into the main pot.")
+		fmt.Printf("Main pot: %v\n", table.MainPot)
+		t.Fail()
+	}
+
+	if endBet == false {
+		fmt.Println("Error reading player input.")
+		t.Fail()
+	}
+
+	if err := tmpfile.Close(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func TestBetInvalidInput(t *testing.T) {
+	content := []byte("thirty")
+	tmpfile, err := ioutil.TempFile("", "tempfile")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer os.Remove(tmpfile.Name()) // clean up
+
+	if _, err := tmpfile.Write(content); err != nil {
+		log.Fatal(err)
+	}
+
+	if _, err := tmpfile.Seek(0, 0); err != nil {
+		log.Fatal(err)
+	}
+
+	oldStdin := os.Stdin
+	defer func() { os.Stdin = oldStdin }() // Restore original Stdin
+
+	os.Stdin = tmpfile
+
+	table := table.Table{}
+	sabacc.SetupTable(&table)
+
+	var testPlayer = table.Players[0]
+	fmt.Printf("\n%v's hand is: %v\n", testPlayer.Name, testPlayer.Hand)
+	var endBet = sabacc.Bet(&table, &testPlayer)
+
+	if endBet == false {
+		fmt.Println("Error reading player input. --- EXPECTED")
+	}
+
+	if err := tmpfile.Close(); err != nil {
+		log.Fatal(err)
 	}
 }

@@ -26,10 +26,9 @@ func Start() {
 			fmt.Printf("\n%v's hand is: %v", player.Name, player.Hand)
 		}
 
-		/* BETTING PHASE
 		for _, player := range table.Players {
-			Bet(&table, &player)
-		}*/
+			BetAction(&table, &player)
+		}
 
 		fmt.Printf("\ndiscard pile is: %v", table.DiscardPile)
 		fmt.Printf("\nThere are %v cards left in the deck.", len(table.SabaccDeck.Cards))
@@ -82,7 +81,7 @@ func BetAction(table *table.Table, player *player.Player) {
 
 		switch choice {
 		case "1", "Bet", "bet":
-
+			endBet = Bet(table, player)
 		case "2", "Check", "check":
 
 		case "3", "Fold", "fold":
@@ -96,7 +95,7 @@ func BetAction(table *table.Table, player *player.Player) {
 
 func SetupTable(table *table.Table) {
 	fmt.Println("Setting up a table...")
-	time.Sleep(1 * time.Second)
+	//time.Sleep(1 * time.Second)
 	table.SabaccDeck = deck.ShuffleDeck(deck.InitializeDeck("Sabacc"))
 	table.SeatPlayers()
 	table.DealPlayers()
@@ -125,10 +124,21 @@ func Swap(table *table.Table, player *player.Player) {
 	player.Hand = append(player.Hand, swappedCard)
 }
 
-func Bet(table *table.Table, player *player.Player) {
-	fmt.Println("\nPlease select an amount to bet:")
+func Bet(table *table.Table, player *player.Player) bool {
 	var bet int
-	fmt.Scanf("%s\n", &bet)
+	fmt.Println("\nPlease select an amount to bet:")
+
+	_, err := fmt.Scanf("%d", &bet)
+	if err != nil {
+		//log.Fatalln(err)
+		fmt.Printf("Error reading user input... choose again.\n")
+		return false
+	}
+	player.Bet = bet
+	fmt.Printf("%v bet %v credits\n", player.Name, player.Bet)
+	table.MainPot += player.Bet
+	fmt.Printf("The table main pot is: %v\n", table.MainPot)
+	return true
 }
 
 func Check(table *table.Table, player *player.Player) {
