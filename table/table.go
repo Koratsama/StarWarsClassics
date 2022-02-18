@@ -3,7 +3,6 @@ package table
 import (
 	"fmt"
 	"strconv"
-	"time"
 
 	"github.com/Koratsama/StarWarsClassics/deck"
 	"github.com/Koratsama/StarWarsClassics/player"
@@ -29,7 +28,7 @@ func (re *Table) SeatPlayers() {
 
 func (re *Table) DealPlayers() {
 	fmt.Println("\nDealing hands...")
-	time.Sleep(3 * time.Second)
+	//time.Sleep(1 * time.Second)
 	for _, player := range re.Players {
 		var hand = re.SabaccDeck.Deal(2)
 		player.Hand[0] = hand[0]
@@ -38,7 +37,7 @@ func (re *Table) DealPlayers() {
 }
 
 func (re *Table) InitializeDiscardPile() {
-	time.Sleep(1 * time.Second)
+	//time.Sleep(1 * time.Second)
 	re.DiscardPile = append(re.DiscardPile, re.SabaccDeck.Deal(1)...)
 	//fmt.Printf("\nStarting a Disard Pile with: %v", re.DiscardPile)
 }
