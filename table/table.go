@@ -14,6 +14,7 @@ type Table struct {
 	Players     []player.Player
 	MainPot     int
 	SabaccPot   int
+	MaxBet      int
 }
 
 func (re *Table) SeatPlayers() {

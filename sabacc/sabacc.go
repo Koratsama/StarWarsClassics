@@ -27,7 +27,12 @@ func Start() {
 		}
 
 		for _, player := range table.Players {
-			BetAction(&table, &player)
+			fmt.Printf("\nThe discard pile is: %v", table.DiscardPile)
+			fmt.Printf("\n%v's hand is: %v", player.Name, player.Hand)
+			fmt.Printf("\nCurrent bet is: %v", table.MaxBet)
+			if len(player.Hand) != 0 {
+				BetAction(&table, &player)
+			}
 		}
 
 		fmt.Printf("\ndiscard pile is: %v", table.DiscardPile)
@@ -65,34 +70,6 @@ func Action(table *table.Table, player *player.Player) {
 
 }
 
-func BetAction(table *table.Table, player *player.Player) {
-
-	var endBet bool = false
-	for !endBet {
-		var choice string
-		endBet = true
-
-		t := time.Now()
-		rand.Seed(int64(t.Nanosecond()))
-		fmt.Println("\n1. Bet\n2. Check\n3. Fold" +
-			"\nPlease select an action:")
-
-		fmt.Scanf("%s\n", &choice)
-
-		switch choice {
-		case "1", "Bet", "bet":
-			endBet = Bet(table, player)
-		case "2", "Check", "check":
-
-		case "3", "Fold", "fold":
-			Fold(table, player)
-		default:
-			fmt.Println("Invalid option. Please choose again.")
-			endBet = false
-		}
-	}
-}
-
 func SetupTable(table *table.Table) {
 	fmt.Println("Setting up a table...")
 	//time.Sleep(1 * time.Second)
@@ -113,7 +90,6 @@ func Gain(table *table.Table, player *player.Player) {
 
 func Discard(table *table.Table, player *player.Player) {
 	table.DiscardPile = append(table.DiscardPile, player.Discard(rand.Intn(len(player.Hand)-1)+1))
-
 	player.Hand = append(player.Hand, table.SabaccDeck.Deal(1)...)
 }
 
@@ -122,6 +98,34 @@ func Swap(table *table.Table, player *player.Player) {
 	table.DiscardPile = table.DiscardPile[:len(table.DiscardPile)-1]
 	table.DiscardPile = append(table.DiscardPile, player.Discard(rand.Intn(len(player.Hand)-1)+1))
 	player.Hand = append(player.Hand, swappedCard)
+}
+
+func BetAction(table *table.Table, player *player.Player) {
+
+	var endBet bool = false
+	for !endBet {
+		var choice string
+		endBet = true
+
+		t := time.Now()
+		rand.Seed(int64(t.Nanosecond()))
+		fmt.Println("\n1. Bet\n2. Check\n3. Fold" +
+			"\nPlease select an action:")
+
+		fmt.Scanf("%s\n", &choice)
+
+		switch choice {
+		case "1", "Bet", "bet":
+			endBet = Bet(table, player)
+		case "2", "Check", "check":
+			endBet = Check(table, player)
+		case "3", "Fold", "fold":
+			Fold(table, player)
+		default:
+			fmt.Println("Invalid option. Please choose again.")
+			endBet = false
+		}
+	}
 }
 
 func Bet(table *table.Table, player *player.Player) bool {
@@ -134,18 +138,34 @@ func Bet(table *table.Table, player *player.Player) bool {
 		fmt.Printf("Error reading user input... choose again.\n")
 		return false
 	}
+
+	if bet < table.MaxBet {
+		fmt.Printf("%v did not bet the minimum required: %v\n", player.Name, table.MaxBet)
+		return false
+	}
+	if bet == table.MaxBet {
+		fmt.Printf("%v called with %v credits\n", player.Name, bet)
+	}
+	if bet > table.MaxBet {
+		fmt.Printf("%v bet %v credits\n", player.Name, bet)
+		table.MaxBet = bet
+	}
 	player.Bet = bet
-	fmt.Printf("%v bet %v credits\n", player.Name, player.Bet)
-	table.MainPot += player.Bet
-	fmt.Printf("The table main pot is: %v\n", table.MainPot)
 	return true
 }
 
-func Check(table *table.Table, player *player.Player) {
-
+func Check(table *table.Table, player *player.Player) bool {
+	if table.MaxBet == player.Bet {
+		fmt.Printf("%v checks\n", player.Name)
+		return true
+	} else {
+		fmt.Printf("%v cannot check\n", player.Name)
+		return false
+	}
 }
 
 func Fold(table *table.Table, player *player.Player) {
 	//discard all cards in the hand
+	fmt.Printf("Player folded: %v\n", player.Hand)
 	table.DiscardPile = append(table.DiscardPile, player.FoldHand()...)
 }

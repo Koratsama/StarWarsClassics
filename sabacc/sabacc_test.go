@@ -157,12 +157,6 @@ func TestBetHappyPath(t *testing.T) {
 		t.Fail()
 	}
 
-	if table.MainPot == 0 {
-		fmt.Println("player did not bet into the main pot.")
-		fmt.Printf("Main pot: %v\n", table.MainPot)
-		t.Fail()
-	}
-
 	if endBet == false {
 		fmt.Println("Error reading player input.")
 		t.Fail()
