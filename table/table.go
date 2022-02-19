@@ -17,6 +17,12 @@ type Table struct {
 	MaxBet      int
 }
 
+/**
+Name: SeatPlayers
+Purpose: The SeatPlayers function populates 6 players around the table. It also
+instantiates their hands and total credits to 300.
+Parameters: table - reference to the games table
+**/
 func (re *Table) SeatPlayers() {
 	for i := 1; i < 7; i++ {
 		player := player.Player{}
@@ -27,6 +33,12 @@ func (re *Table) SeatPlayers() {
 	}
 }
 
+/**
+Name: DealPlayers
+Purpose: The DealPlayers function deals 2 cards from the top of the
+table deck and sets them to each players initial hand for that round.
+Parameters: table - reference to the games table.
+**/
 func (re *Table) DealPlayers() {
 	fmt.Println("\nDealing hands...")
 	//time.Sleep(1 * time.Second)
@@ -37,6 +49,12 @@ func (re *Table) DealPlayers() {
 	}
 }
 
+/**
+Name: InitializeDiscardPile
+Purpose: The InitializeDiscardPile function starts the rounds discard pile
+by taking one card off the deck and putting it into the tables discardPile.
+Parameters: table - reference to the games table.
+**/
 func (re *Table) InitializeDiscardPile() {
 	//time.Sleep(1 * time.Second)
 	re.DiscardPile = append(re.DiscardPile, re.SabaccDeck.Deal(1)...)

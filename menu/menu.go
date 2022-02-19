@@ -7,6 +7,11 @@ import (
 	"github.com/Koratsama/StarWarsClassics/sabacc"
 )
 
+/**
+Name: Start
+Purpose: Prompts the user a menu of games to choose from.
+Parameters: None
+**/
 func Start() bool {
 
 	var shutdown bool = false
