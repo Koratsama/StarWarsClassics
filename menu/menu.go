@@ -3,8 +3,15 @@ package menu
 import (
 	"fmt"
 	"time"
+
+	"github.com/Koratsama/StarWarsClassics/sabacc"
 )
 
+/**
+Name: Start
+Purpose: Prompts the user a menu of games to choose from.
+Parameters: None
+**/
 func Start() bool {
 
 	var shutdown bool = false
@@ -26,9 +33,10 @@ func Start() bool {
 				"\n... unfortunately this game is not available at this time." +
 				"\nPlease choose another.")
 		case "3", "Sabacc", "sabacc":
-			fmt.Println("\nThank you for choosing Sabacc!" +
-				"\n... unfortunately this game is not available at this time." +
-				"\nPlease choose another.")
+			fmt.Println("\nThank you for choosing Sabacc!")
+			sabacc.Start()
+			fmt.Println("\nThank you for playing!...")
+
 		case "4", "q", "Q", "quit", "Quit":
 			fmt.Println("May the force be with you...")
 			time.Sleep(1 * time.Second)
