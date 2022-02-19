@@ -18,6 +18,7 @@ func Start() {
 
 	for !gameOver {
 
+		/* initial game logic for testing.
 		//TODO: implement game logic
 		for _, player := range table.Players {
 			fmt.Printf("\nThe discard pile is: %v", table.DiscardPile)
@@ -34,6 +35,7 @@ func Start() {
 				BetAction(&table, &player)
 			}
 		}
+		*/
 
 		fmt.Printf("\ndiscard pile is: %v", table.DiscardPile)
 		fmt.Printf("\nThere are %v cards left in the deck.", len(table.SabaccDeck.Cards))
@@ -61,7 +63,7 @@ func Action(table *table.Table, player *player.Player) {
 		case "3", "Swap", "swap":
 			Swap(table, player)
 		case "4", "Stand", "stand":
-			//do nothing
+			Stand(table, player)
 		default:
 			fmt.Println("Invalid option. Please choose again.")
 			endAction = false
@@ -98,6 +100,10 @@ func Swap(table *table.Table, player *player.Player) {
 	table.DiscardPile = table.DiscardPile[:len(table.DiscardPile)-1]
 	table.DiscardPile = append(table.DiscardPile, player.Discard(rand.Intn(len(player.Hand)-1)+1))
 	player.Hand = append(player.Hand, swappedCard)
+}
+
+func Stand(table *table.Table, player *player.Player) {
+	fmt.Printf("%v stands\n", player.Name)
 }
 
 func BetAction(table *table.Table, player *player.Player) {
