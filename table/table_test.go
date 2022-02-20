@@ -8,25 +8,24 @@ import (
 	"github.com/Koratsama/StarWarsClassics/table"
 )
 
-func TestSeatPlayers(t *testing.T) {
-	//create test table and seat 6 players
+func TestCheckPlayerStatus(t *testing.T) {
 	var testTable = table.Table{}
 	testTable.SeatPlayers()
+	testTable.SabaccDeck = deck.ShuffleDeck(deck.InitializeDeck("Sabacc"))
+	testTable.DealPlayers()
 
-	if len(testTable.Players) != 6 {
-		fmt.Println("table not initialized with 6 players.")
+	testTable.Players[0].Credits = 0
+
+	var testGameOver = testTable.CheckPlayerStatus()
+
+	if testGameOver {
+		fmt.Println("CheckPlayerStatus func returned incorrectly.")
 		t.Fail()
 	}
 
-	for _, player := range testTable.Players {
-		if player.Credits != 300 {
-			fmt.Printf("\n%v does not have 300 credits.\n", player.Name)
-			t.Fail()
-		}
-		if len(player.Hand) != 2 {
-			fmt.Printf("\n%v does not have hand size of 2.\n", player.Name)
-			t.Fail()
-		}
+	if len(testTable.Players) != 5 {
+		fmt.Println("CheckPlayerStatus func did not remove a player with zero credits.")
+		t.Fail()
 	}
 }
 
@@ -66,5 +65,27 @@ func TestInitializeDiscardPile(t *testing.T) {
 	if len(testTable.SabaccDeck.Cards) != 61 {
 		fmt.Println("Card not removed from the deck.")
 		t.Fail()
+	}
+}
+
+func TestSeatPlayers(t *testing.T) {
+	//create test table and seat 6 players
+	var testTable = table.Table{}
+	testTable.SeatPlayers()
+
+	if len(testTable.Players) != 6 {
+		fmt.Println("table not initialized with 6 players.")
+		t.Fail()
+	}
+
+	for _, player := range testTable.Players {
+		if player.Credits != 300 {
+			fmt.Printf("\n%v does not have 300 credits.\n", player.Name)
+			t.Fail()
+		}
+		if len(player.Hand) != 2 {
+			fmt.Printf("\n%v does not have hand size of 2.\n", player.Name)
+			t.Fail()
+		}
 	}
 }
