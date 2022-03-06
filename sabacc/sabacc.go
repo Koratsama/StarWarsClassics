@@ -10,12 +10,12 @@ import (
 	"github.com/Koratsama/StarWarsClassics/table"
 )
 
-/**
+/*
 Name: Start
 Purpose: Initiates a game of Sabacc. When the game is over the user
 should be brought back to the menu selection.
 Parameters: None
-**/
+*/
 func Start() {
 
 	var gameOver bool = false
@@ -49,27 +49,28 @@ func Start() {
 	}
 }
 
-/**
+/*
 Name: SetupTable
 Purpose: Initiates a game of Sabacc.
 Parameters: None
-**/
+*/
 func SetupTable(table *table.Table) {
 	fmt.Println("Setting up a table...")
 	//time.Sleep(1 * time.Second)
 	table.SabaccDeck = deck.ShuffleDeck(deck.InitializeDeck("Sabacc"))
+	table.Dice.CreateSpikeDice()
 	table.SeatPlayers()
 	table.DealPlayers()
 	table.InitializeDiscardPile()
 }
 
-/**
+/*
 Name: Action
 Purpose: This prompts a player to choose an action. In the context of
 a Sabacc game, Players have an action round where they will choose to Gain,
 Discard, Swap, or Stand.
 Parameters: table, player - reference to the current table and player taking action.
-**/
+*/
 func Action(table *table.Table, player *player.Player) {
 	var endAction bool = false
 	for !endAction {
@@ -99,13 +100,13 @@ func Action(table *table.Table, player *player.Player) {
 
 }
 
-/**
+/*
 Name: Gain
 Purpose: The Gain function is for the player to draw 1 from the top of
 the deck. The user should then be able to decide to keep or immediately discard
 the new card into the discard pile.
 Parameters: table, player - reference to the current table and player taking action.
-**/
+*/
 func Gain(table *table.Table, player *player.Player) {
 	player.Hand = append(player.Hand, table.SabaccDeck.Deal(1)...)
 
@@ -115,23 +116,23 @@ func Gain(table *table.Table, player *player.Player) {
 	}
 }
 
-/**
+/*
 Name: Discard
 Purpose: The Discard function is for the player to discard 1 card from
 their hand into the discard pile and draw a new one from the top of the deck.
 Parameters: table, player - reference to the current table and player taking action.
-**/
+*/
 func Discard(table *table.Table, player *player.Player) {
 	table.DiscardPile = append(table.DiscardPile, player.Discard(rand.Intn(len(player.Hand)-1)+1))
 	player.Hand = append(player.Hand, table.SabaccDeck.Deal(1)...)
 }
 
-/**
+/*
 Name: Swap
 Purpose: The Swap function is for the player to take the top card
 from the discard pile and swap it with an existing card in their hand.
 Parameters: table, player - reference to the current table and player taking action.
-**/
+*/
 func Swap(table *table.Table, player *player.Player) {
 	var swappedCard = table.DiscardPile[len(table.DiscardPile)-1]
 	table.DiscardPile = table.DiscardPile[:len(table.DiscardPile)-1]
@@ -139,22 +140,22 @@ func Swap(table *table.Table, player *player.Player) {
 	player.Hand = append(player.Hand, swappedCard)
 }
 
-/**
+/*
 Name: Stand
 Purpose: The Stand function is for the player to essentially
 take no action and pass the turn to the next player.
 Parameters: table, player - reference to the current table and player taking action.
-**/
+*/
 func Stand(table *table.Table, player *player.Player) {
 	fmt.Printf("%v stands\n", player.Name)
 }
 
-/**
+/*
 Name: BetAction
 Purpose: The BetAction function will prompt the player with choices
 for their betting round. This will include actions such as bet, check, or fold.
 Parameters: table, player - reference to the current table and player taking action.
-**/
+*/
 func BetAction(table *table.Table, player *player.Player) {
 
 	var endBet bool = false
@@ -183,7 +184,7 @@ func BetAction(table *table.Table, player *player.Player) {
 	}
 }
 
-/**
+/*
 Name: Bet
 Purpose: The Bet function allows the player to specify a number of credits to bet.
 if the bet is equivalent to the current tables maximum bet, then the player will
@@ -192,7 +193,7 @@ the player has "Raised" and the betting turns should reset after everyone has ta
 betting action.
 Parameters: table, player - reference to the current table and player taking action.
 Returns: flag to indicate if player betting action is over.
-**/
+*/
 func Bet(table *table.Table, player *player.Player) bool {
 	var bet int
 	fmt.Println("\nPlease select an amount to bet:")
@@ -219,13 +220,13 @@ func Bet(table *table.Table, player *player.Player) bool {
 	return true
 }
 
-/**
+/*
 Name: Check
 Purpose: The Check func essentially passes the betting action to the next player.
 This can only be done when the players current bet is equal to the tables maximum bet.
 Parameters: table, player - reference to the current table and player taking action.
 Returns: flag to indicate if player betting action is over.
-**/
+*/
 func Check(table *table.Table, player *player.Player) bool {
 	if table.MaxBet == player.Bet {
 		fmt.Printf("%v checks\n", player.Name)
@@ -236,12 +237,12 @@ func Check(table *table.Table, player *player.Player) bool {
 	}
 }
 
-/**
+/*
 Name: Fold
 Purpose: The Fold action allows the player to discard their entire hand into the discard
 pile. Once this has happened the player should not be included in the current round.
 Parameters: table, player - reference to the current table and player taking action.
-**/
+*/
 func Fold(table *table.Table, player *player.Player) {
 	//discard all cards in the hand
 	fmt.Printf("Player folded: %v\n", player.Hand)
