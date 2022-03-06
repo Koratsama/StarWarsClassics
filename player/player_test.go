@@ -57,3 +57,28 @@ func TestDiscardLastCard(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestFold(t *testing.T) {
+	//initialize a deck of cards.
+	var deck = deck.InitializeDeck("Sabacc")
+	//create a test player and deal 2 from the deck.
+	var testPlayer = player.Player{}
+	testPlayer.Hand = deck.Deal(2)
+
+	var foldedHand = deck.Cards
+
+	foldedHand = testPlayer.FoldHand()
+
+	fmt.Printf("\nThe cards folded were: %v\n", foldedHand)
+	//if the test players hand is not 1 after discarding, fail the test.
+	if len(testPlayer.Hand) != 0 {
+		fmt.Printf("\ntest player's hand is not empty: %v\n", foldedHand)
+		t.Fail()
+	}
+
+	//if the discarded card does not match the expected card, fail the test.
+	if len(foldedHand) == 0 {
+		fmt.Println("\nfolded hand has no cards.")
+		t.Fail()
+	}
+}
