@@ -1,7 +1,11 @@
 package menu
 
 import (
+	"bufio"
 	"fmt"
+	"log"
+	"os"
+	"strings"
 	"time"
 
 	"github.com/Koratsama/StarWarsClassics/sabacc"
@@ -15,36 +19,39 @@ Parameters: None
 func Start() bool {
 
 	var shutdown bool = false
-	for !shutdown {
-		var choice string
+	var choice string
 
-		fmt.Println("\n1. Dejarik\n2. Pazaak\n3. Sabacc\n4. quit" +
-			"\nPlease select a game to launch:")
+	fmt.Println("\n1. Sabacc\n2. Corellian Spike\n3. Coruscant Shift\n4. Quit" +
+		"\nPlease select a game to launch:")
 
-		fmt.Scanf("%s\n", &choice)
+	in := bufio.NewReader(os.Stdin)
+	choice, err := in.ReadString('\n')
+	if err != nil {
+		log.Fatal(err)
+		return true
+	}
+	choice = strings.Split(choice, "\n")[0] //get user input
 
-		switch choice {
-		case "1", "Dejarik", "dejarik":
-			fmt.Println("\nThank you for choosing Dejarik!" +
-				"\n... unfortunately this game is not available at this time." +
-				"\nPlease choose another.")
-		case "2", "Pazaak", "pazaak":
-			fmt.Println("\nThank you for choosing Pazaak!" +
-				"\n... unfortunately this game is not available at this time." +
-				"\nPlease choose another.")
-		case "3", "Sabacc", "sabacc":
-			fmt.Println("\nThank you for choosing Sabacc!")
-			sabacc.Start()
-			fmt.Println("\nThank you for playing!...")
-
-		case "4", "q", "Q", "quit", "Quit":
-			fmt.Println("May the force be with you...")
-			time.Sleep(1 * time.Second)
-			fmt.Println("always")
-			shutdown = true
-		default:
-			fmt.Println("Invalid option. Please choose again.")
-		}
+	switch choice {
+	case "1", "Sabacc", "sabacc":
+		fmt.Println("\nThank you for choosing Sabacc!" +
+			"\n... unfortunately this game is not available at this time." +
+			"\nPlease choose another.")
+	case "2", "Corellian Spike", "corellian spike":
+		fmt.Println("\nThank you for choosing Corellian Spike Sabacc!")
+		sabacc.Start()
+		fmt.Println("\nThank you for playing!...")
+	case "3", "Coruscant Shift", "coruscant shift":
+		fmt.Println("\nThank you for choosing Coruscant Shift Sabacc!" +
+			"\n... unfortunately this game is not available at this time." +
+			"\nPlease choose another.")
+	case "4", "q", "Q", "Quit", "quit":
+		fmt.Println("May the force be with you...")
+		time.Sleep(1 * time.Second)
+		fmt.Println("always")
+		shutdown = true
+	default:
+		fmt.Printf("\nInvalid option: %s\nPlease choose again.\n", choice)
 	}
 	return shutdown
 }

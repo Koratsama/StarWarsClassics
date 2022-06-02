@@ -26,7 +26,12 @@ func main() {
 	fmt.Println(string(content))
 	fmt.Println("\nWelcome to Star Wars Classics!")
 
-	var shutdown bool = menu.Start()
+	var shutdown bool = false
+
+	for !shutdown {
+		shutdown = menu.Start()
+	}
+	//shutdown = menu.Start()
 
 	if shutdown {
 		go gracefulShutdown()
