@@ -24,7 +24,17 @@ func Start() {
 
 	for !gameOver {
 
+<<<<<<< HEAD
 		/* //initial game logic for testing.
+=======
+		//implement round 1
+		RoundOne(&table)
+		//implement round 2
+
+		//implement round 3
+
+		/* initial game logic for testing.
+>>>>>>> e269108 (implementing round one)
 		//TODO: implement game logic
 		for _, player := range table.Players {
 			fmt.Printf("\nThe discard pile is: %v", table.DiscardPile)
@@ -61,6 +71,32 @@ func SetupTable(table *table.Table) {
 	table.SeatPlayers()
 	table.DealPlayers()
 	table.InitializeDiscardPile()
+}
+
+/*
+Name: RoundOne
+Purpose: This function executes all the steps required for the first round of a game
+of sabacc. each player will get prompted to take actions and bets. and then proceed
+to the next round.
+Parameters: table - reference to the current table.
+*/
+func RoundOne(table *table.Table) {
+
+	for _, player := range table.Players {
+		fmt.Printf("\nThe discard pile is: %v", table.DiscardPile)
+		fmt.Printf("\n%v's hand is: %v", player.Name, player.Hand)
+		Action(table, &player)
+		fmt.Printf("\n%v's hand is: %v", player.Name, player.Hand)
+	}
+
+	for _, player := range table.Players {
+		fmt.Printf("\nThe discard pile is: %v", table.DiscardPile)
+		fmt.Printf("\n%v's hand is: %v", player.Name, player.Hand)
+		fmt.Printf("\nCurrent bet is: %v", table.MaxBet)
+		if len(player.Hand) != 0 {
+			BetAction(table, &player)
+		}
+	}
 }
 
 /*
