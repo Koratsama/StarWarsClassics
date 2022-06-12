@@ -12,7 +12,7 @@ import (
 
 func TestMenuSabacc(t *testing.T) {
 
-	content := []byte("Sabacc\n")
+	content := []byte("Sabacc\r\n")
 	tmpfile, err := ioutil.TempFile("", "tempfile")
 	if err != nil {
 		log.Fatal(err)
@@ -48,7 +48,7 @@ func TestMenuSabacc(t *testing.T) {
 
 func TestMenuCorellianSpike(t *testing.T) {
 
-	content := []byte("Corellian Spike\n")
+	content := []byte("Corellian Spike\r\n")
 	tmpfile, err := ioutil.TempFile("", "tempfile")
 	if err != nil {
 		log.Fatal(err)
@@ -84,7 +84,7 @@ func TestMenuCorellianSpike(t *testing.T) {
 
 func TestMenuCoruscantShift(t *testing.T) {
 
-	content := []byte("Coruscant Shift\n")
+	content := []byte("Coruscant Shift\r\n")
 	tmpfile, err := ioutil.TempFile("", "tempfile")
 	if err != nil {
 		log.Fatal(err)
@@ -119,7 +119,7 @@ func TestMenuCoruscantShift(t *testing.T) {
 }
 
 func TestMenuQuitPath(t *testing.T) {
-	content := []byte("Quit\n")
+	content := []byte("Quit\r\n")
 	tmpfile, err := ioutil.TempFile("", "tempfile")
 	if err != nil {
 		log.Fatal(err)
@@ -154,7 +154,7 @@ func TestMenuQuitPath(t *testing.T) {
 }
 
 func TestMenuInvalidInput(t *testing.T) {
-	content := []byte("Dejarik\n")
+	content := []byte("Dejarik\r\n")
 	tmpfile, err := ioutil.TempFile("", "tempfile")
 	if err != nil {
 		log.Fatal(err)
