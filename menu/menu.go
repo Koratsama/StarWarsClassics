@@ -1,7 +1,11 @@
 package menu
 
 import (
+	"bufio"
 	"fmt"
+	"log"
+	"os"
+	"strings"
 	"time"
 
 	"github.com/Koratsama/StarWarsClassics/sabacc"
@@ -20,7 +24,13 @@ func Start() bool {
 	fmt.Println("\n1. Sabacc\n2. Corellian Spike\n3. Coruscant Shift\n4. Quit" +
 		"\nPlease select a game to launch:")
 
-	fmt.Scanf("%s\n", &choice)
+	in := bufio.NewReader(os.Stdin)
+	choice, err := in.ReadString('\n')
+	if err != nil {
+		log.Fatal(err)
+		return true
+	}
+	choice = strings.Split(choice, "\r\n")[0] //get user input
 
 	switch choice {
 	case "1", "Sabacc", "sabacc":
