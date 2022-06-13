@@ -3,7 +3,6 @@ package menu
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
 	"strings"
 	"time"
@@ -27,10 +26,12 @@ func Start() bool {
 	in := bufio.NewReader(os.Stdin)
 	choice, err := in.ReadString('\n')
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 		return true
 	}
-	choice = strings.Split(choice, "\n")[0] //get user input
+	//TODO: see if there is a better solution for reading input for mac&windows.
+	choice = strings.Trim(choice, "\n") //for reading in mac input
+	choice = strings.Trim(choice, "\r") //for reading in windows input.
 
 	switch choice {
 	case "1", "Sabacc", "sabacc":
