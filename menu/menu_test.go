@@ -187,3 +187,38 @@ func TestMenuInvalidInput(t *testing.T) {
 		log.Fatal(err)
 	}
 }
+
+func TestMenuError(t *testing.T) {
+	content := []byte("Dejarik\r") // no '\n' character should throw error.
+	tmpfile, err := ioutil.TempFile("", "tempfile")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer os.Remove(tmpfile.Name()) // clean up
+
+	if _, err := tmpfile.Write(content); err != nil {
+		log.Fatal(err)
+	}
+
+	if _, err := tmpfile.Seek(0, 0); err != nil {
+		log.Fatal(err)
+	}
+
+	oldStdin := os.Stdin
+	defer func() { os.Stdin = oldStdin }() // Restore original Stdin
+
+	os.Stdin = tmpfile
+
+	//run menu
+	var shutdown bool = menu.Start()
+
+	if shutdown != true {
+		fmt.Println("Fail! Error expected")
+		t.Fail()
+	}
+
+	if err := tmpfile.Close(); err != nil {
+		log.Fatal(err)
+	}
+}
