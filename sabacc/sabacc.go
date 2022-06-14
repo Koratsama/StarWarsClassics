@@ -29,6 +29,8 @@ func Start() {
 =======
 		//implement round 1
 		RoundOne(&table)
+
+		fmt.Println("Round 1 complete!")
 		//implement round 2
 
 		//implement round 3
@@ -89,6 +91,7 @@ func RoundOne(table *table.Table) {
 		fmt.Printf("\n%v's hand is: %v", player.Name, player.Hand)
 	}
 
+	//loop for betting.
 	for _, player := range table.Players {
 		fmt.Printf("\nThe discard pile is: %v", table.DiscardPile)
 		fmt.Printf("\n%v's hand is: %v", player.Name, player.Hand)
@@ -96,6 +99,7 @@ func RoundOne(table *table.Table) {
 		if len(player.Hand) != 0 {
 			BetAction(table, &player)
 		}
+		//check that all players have folded/called. else continue betting.
 	}
 }
 
@@ -145,7 +149,7 @@ Parameters: table, player - reference to the current table and player taking act
 func Gain(table *table.Table, player *player.Player) {
 	player.Hand = append(player.Hand, table.SabaccDeck.Deal(1)...)
 
-	//TODO: don't make this a coin flip
+	//TODO: Double check the rule on discarding the draw. I don't know if you're allowed to discard.
 	if rand.Intn(2) == 1 {
 		table.DiscardPile = append(table.DiscardPile, player.Discard(len(player.Hand)))
 	}
@@ -282,4 +286,9 @@ func Fold(table *table.Table, player *player.Player) {
 	//discard all cards in the hand
 	fmt.Printf("Player folded: %v\n", player.Hand)
 	table.DiscardPile = append(table.DiscardPile, player.FoldHand()...)
+}
+
+func endBetting(table *table.Table) {
+	//check if all players have either folded or bet matches the maximum bet.
+
 }

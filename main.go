@@ -5,9 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"os/signal"
 	"path/filepath"
-	"syscall"
 	"time"
 
 	"github.com/Koratsama/StarWarsClassics/menu"
@@ -41,11 +39,12 @@ func main() {
 }
 
 func gracefulShutdown() {
-	s := make(chan os.Signal, 1)
-	signal.Notify(s, os.Interrupt)
-	signal.Notify(s, syscall.SIGTERM)
+	//s := make(chan os.Signal, 1)
+	//signal.Notify(s, os.Interrupt)
+	//signal.Notify(s, syscall.SIGTERM)
+	os.Interrupt.Signal()
 	go func() {
-		<-s
+		//<-s
 		fmt.Println("Sutting down gracefully...")
 		// clean up here
 		time.Sleep(3 * time.Second)
