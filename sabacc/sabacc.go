@@ -84,6 +84,8 @@ Parameters: table - reference to the current table.
 */
 func RoundOne(table *table.Table) {
 
+	var endRound bool = false
+
 	for _, player := range table.Players {
 		fmt.Printf("\nThe discard pile is: %v", table.DiscardPile)
 		fmt.Printf("\n%v's hand is: %v", player.Name, player.Hand)
@@ -91,15 +93,18 @@ func RoundOne(table *table.Table) {
 		fmt.Printf("\n%v's hand is: %v", player.Name, player.Hand)
 	}
 
-	//loop for betting.
-	for _, player := range table.Players {
-		fmt.Printf("\nThe discard pile is: %v", table.DiscardPile)
-		fmt.Printf("\n%v's hand is: %v", player.Name, player.Hand)
-		fmt.Printf("\nCurrent bet is: %v", table.MaxBet)
-		if len(player.Hand) != 0 {
-			BetAction(table, &player)
+	for !endRound {
+		//loop for betting.
+		for _, player := range table.Players {
+			fmt.Printf("\nThe discard pile is: %v", table.DiscardPile)
+			fmt.Printf("\n%v's hand is: %v", player.Name, player.Hand)
+			fmt.Printf("\nCurrent bet is: %v", table.MaxBet)
+			if len(player.Hand) != 0 {
+				BetAction(table, &player)
+			}
 		}
 		//check that all players have folded/called. else continue betting.
+		endRound = endBetting(table)
 	}
 }
 
@@ -288,7 +293,12 @@ func Fold(table *table.Table, player *player.Player) {
 	table.DiscardPile = append(table.DiscardPile, player.FoldHand()...)
 }
 
-func endBetting(table *table.Table) {
+func endBetting(table *table.Table) bool {
 	//check if all players have either folded or bet matches the maximum bet.
-
+	for _, player := range table.Players {
+		if !(len(player.Hand) == 0) && player.Bet != table.MaxBet {
+			return false
+		}
+	}
+	return true
 }
