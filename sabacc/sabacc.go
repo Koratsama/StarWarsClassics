@@ -24,7 +24,7 @@ func Start() {
 
 	for !gameOver {
 
-		/* initial game logic for testing.
+		/* //initial game logic for testing.
 		//TODO: implement game logic
 		for _, player := range table.Players {
 			fmt.Printf("\nThe discard pile is: %v", table.DiscardPile)
@@ -33,15 +33,14 @@ func Start() {
 			fmt.Printf("\n%v's hand is: %v", player.Name, player.Hand)
 		}
 
-		for _, player := range table.Players {
+		for i := 0; i < len(table.Players)-1; i++ {
 			fmt.Printf("\nThe discard pile is: %v", table.DiscardPile)
-			fmt.Printf("\n%v's hand is: %v", player.Name, player.Hand)
+			fmt.Printf("\n%v's hand is: %v", table.Players[i].Name, table.Players[i].Hand)
 			fmt.Printf("\nCurrent bet is: %v", table.MaxBet)
-			if len(player.Hand) != 0 {
-				BetAction(&table, &player)
+			if len(table.Players[i].Hand) != 0 {
+				BetAction(&table, &table.Players[i])
 			}
-		}
-		*/
+		} */
 
 		fmt.Printf("\ndiscard pile is: %v", table.DiscardPile)
 		fmt.Printf("\nThere are %v cards left in the deck.", len(table.SabaccDeck.Cards))
