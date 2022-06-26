@@ -32,8 +32,13 @@ func Start() {
 
 		//implement round 3
 
-		fmt.Printf("\ndiscard pile is: %v", table.DiscardPile)
 		fmt.Printf("\nThere are %v cards left in the deck.", len(table.SabaccDeck.Cards))
+		//show hands
+		for _, player := range table.Players {
+			if len(player.Hand) != 0 {
+				fmt.Printf("\n%v's hand is: %v total", player.Name, player.Hand)
+			}
+		}
 		gameOver = true
 	}
 }
@@ -65,7 +70,7 @@ func RoundOne(table *table.Table) {
 	var endRound bool = false
 
 	for i := 0; i < len(table.Players); i++ {
-		fmt.Printf("\nThe discard pile [%v] is: %v", len(table.DiscardPile), table.DiscardPile)
+		fmt.Printf("\nThe discard pile [%v] is: %v", len(table.DiscardPile), table.DiscardPile[len(table.DiscardPile)-1])
 		fmt.Printf("\n%v's hand is: %v", table.Players[i].Name, table.Players[i].Hand)
 		Action(table, &table.Players[i])
 		fmt.Printf("\n%v's hand is: %v", table.Players[i].Name, table.Players[i].Hand)
@@ -74,10 +79,10 @@ func RoundOne(table *table.Table) {
 	for !endRound {
 		//loop for betting.
 		for i := 0; i < len(table.Players); i++ {
-			fmt.Printf("\nThe discard pile [%v] is: %v", len(table.DiscardPile), table.DiscardPile)
-			fmt.Printf("\n%v's hand is: %v", table.Players[i].Name, table.Players[i].Hand)
-			fmt.Printf("\nCurrent bet is: %v", table.MaxBet)
 			if len(table.Players[i].Hand) != 0 {
+				fmt.Printf("\nThe discard pile [%v] is: %v", len(table.DiscardPile), table.DiscardPile[len(table.DiscardPile)-1])
+				fmt.Printf("\n%v's hand is: %v", table.Players[i].Name, table.Players[i].Hand)
+				fmt.Printf("\nCurrent bet is: %v", table.MaxBet)
 				BetAction(table, &table.Players[i])
 			}
 		}
