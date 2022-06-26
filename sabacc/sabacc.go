@@ -24,9 +24,6 @@ func Start() {
 
 	for !gameOver {
 
-<<<<<<< HEAD
-		/* //initial game logic for testing.
-=======
 		//implement round 1
 		RoundOne(&table)
 
@@ -36,7 +33,6 @@ func Start() {
 		//implement round 3
 
 		/* initial game logic for testing.
->>>>>>> e269108 (implementing round one)
 		//TODO: implement game logic
 		for _, player := range table.Players {
 			fmt.Printf("\nThe discard pile is: %v", table.DiscardPile)
