@@ -32,24 +32,6 @@ func Start() {
 
 		//implement round 3
 
-		/* initial game logic for testing.
-		//TODO: implement game logic
-		for _, player := range table.Players {
-			fmt.Printf("\nThe discard pile is: %v", table.DiscardPile)
-			fmt.Printf("\n%v's hand is: %v", player.Name, player.Hand)
-			Action(&table, &player)
-			fmt.Printf("\n%v's hand is: %v", player.Name, player.Hand)
-		}
-
-		for i := 0; i < len(table.Players)-1; i++ {
-			fmt.Printf("\nThe discard pile is: %v", table.DiscardPile)
-			fmt.Printf("\n%v's hand is: %v", table.Players[i].Name, table.Players[i].Hand)
-			fmt.Printf("\nCurrent bet is: %v", table.MaxBet)
-			if len(table.Players[i].Hand) != 0 {
-				BetAction(&table, &table.Players[i])
-			}
-		} */
-
 		fmt.Printf("\ndiscard pile is: %v", table.DiscardPile)
 		fmt.Printf("\nThere are %v cards left in the deck.", len(table.SabaccDeck.Cards))
 		gameOver = true
@@ -82,21 +64,21 @@ func RoundOne(table *table.Table) {
 
 	var endRound bool = false
 
-	for _, player := range table.Players {
-		fmt.Printf("\nThe discard pile is: %v", table.DiscardPile)
-		fmt.Printf("\n%v's hand is: %v", player.Name, player.Hand)
-		Action(table, &player)
-		fmt.Printf("\n%v's hand is: %v", player.Name, player.Hand)
+	for i := 0; i < len(table.Players); i++ {
+		fmt.Printf("\nThe discard pile [%v] is: %v", len(table.DiscardPile), table.DiscardPile)
+		fmt.Printf("\n%v's hand is: %v", table.Players[i].Name, table.Players[i].Hand)
+		Action(table, &table.Players[i])
+		fmt.Printf("\n%v's hand is: %v", table.Players[i].Name, table.Players[i].Hand)
 	}
 
 	for !endRound {
 		//loop for betting.
-		for _, player := range table.Players {
-			fmt.Printf("\nThe discard pile is: %v", table.DiscardPile)
-			fmt.Printf("\n%v's hand is: %v", player.Name, player.Hand)
+		for i := 0; i < len(table.Players); i++ {
+			fmt.Printf("\nThe discard pile [%v] is: %v", len(table.DiscardPile), table.DiscardPile)
+			fmt.Printf("\n%v's hand is: %v", table.Players[i].Name, table.Players[i].Hand)
 			fmt.Printf("\nCurrent bet is: %v", table.MaxBet)
-			if len(player.Hand) != 0 {
-				BetAction(table, &player)
+			if len(table.Players[i].Hand) != 0 {
+				BetAction(table, &table.Players[i])
 			}
 		}
 		//check that all players have folded/called. else continue betting.
