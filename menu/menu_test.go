@@ -48,6 +48,7 @@ func TestMenuSabacc(t *testing.T) {
 
 func TestMenuCorellianSpike(t *testing.T) {
 	//skip this test for now since we are starting to implement round logic.
+	//TODO: update unit test to properly test corellianSpike
 	t.Skip()
 	content := []byte("Corellian Spike\r\n")
 	tmpfile, err := ioutil.TempFile("", "tempfile")
