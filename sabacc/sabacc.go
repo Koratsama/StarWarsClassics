@@ -26,11 +26,19 @@ func Start() {
 
 		//implement round 1
 		RoundOne(&table)
+		//sabacc shift
 
 		fmt.Println("Round 1 complete!")
+
 		//implement round 2
+		RoundOne(&table)
+		//sabacc shift
 
 		//implement round 3
+		RoundOne(&table)
+		//sabacc shift
+
+		//calculate winner
 
 		fmt.Printf("\nThere are %v cards left in the deck.", len(table.SabaccDeck.Cards))
 		//show hands
@@ -89,6 +97,28 @@ func RoundOne(table *table.Table) {
 		//check that all players have folded/called. else continue betting.
 		endRound = endBetting(table)
 	}
+}
+
+/*
+Name: SabaccShift
+Purpose: This function should be executed after each round. the table should have
+the spike dice rolled. If there is a sabacc shift,
+Parameters: table - reference to the current table.
+*/
+func SabaccShift(table *table.Table) {
+
+	var shift bool = table.Dice.RollSpikeDice()
+
+	if shift {
+		for i := 0; i < len(table.Players); i++ {
+			var handSize int = len(table.Players[i].Hand)
+			if handSize != 0 {
+				table.Players[i].Discard(handSize)
+				table.Players[i].Hand = table.SabaccDeck.Deal(handSize)
+			}
+		}
+	}
+
 }
 
 /*
