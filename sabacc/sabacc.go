@@ -27,34 +27,41 @@ func Start() {
 		//implement round 1
 		RoundOne(&table)
 		//sabacc shift
+		SabaccShift(&table)
 
 		fmt.Println("Round 1 complete!")
 
 		//implement round 2
 		RoundOne(&table)
 		//sabacc shift
+		SabaccShift(&table)
 
+		fmt.Println("Round 2 complete!")
 		//implement round 3
 		RoundOne(&table)
 		//sabacc shift
+		SabaccShift(&table)
 
+		fmt.Println("Round 3 complete!")
 		//calculate winner
 
 		fmt.Printf("\nThere are %v cards left in the deck.", len(table.SabaccDeck.Cards))
 		//show hands
+		//decide winner
 		for _, player := range table.Players {
 			if len(player.Hand) != 0 {
-				fmt.Printf("\n%v's hand is: %v total", player.Name, player.Hand)
+				fmt.Printf("\n%v's hand is: %v", player.Name, player.Hand)
 			}
+			player.FoldHand()
 		}
-		gameOver = true
+		gameOver = false
 	}
 }
 
 /*
 Name: SetupTable
 Purpose: Initiates a game of Sabacc.
-Parameters: None
+Parameters: table
 */
 func SetupTable(table *table.Table) {
 	fmt.Println("Setting up a table...")
@@ -65,6 +72,21 @@ func SetupTable(table *table.Table) {
 	table.DealPlayers()
 	table.InitializeDiscardPile()
 }
+
+/*
+Name: SetupNewDeck
+Purpose: keeps the current state of the given table but creates a new deck and
+re-deals new hands to each player still in the game.
+Parameters: table
+
+func SetupNewDeck(table *table.Table) {
+	fmt.Println("Dealing new hands...")
+	//time.Sleep(1 * time.Second)
+	//use new deck.
+	table.SabaccDeck = deck.ShuffleDeck(deck.InitializeDeck("Sabacc"))
+	table.DealPlayers()
+	table.InitializeDiscardPile()
+}*/
 
 /*
 Name: RoundOne
@@ -78,10 +100,12 @@ func RoundOne(table *table.Table) {
 	var endRound bool = false
 
 	for i := 0; i < len(table.Players); i++ {
-		fmt.Printf("\nThe discard pile [%v] is: %v", len(table.DiscardPile), table.DiscardPile[len(table.DiscardPile)-1])
-		fmt.Printf("\n%v's hand is: %v", table.Players[i].Name, table.Players[i].Hand)
-		Action(table, &table.Players[i])
-		fmt.Printf("\n%v's hand is: %v", table.Players[i].Name, table.Players[i].Hand)
+		if len(table.Players[i].Hand) != 0 {
+			fmt.Printf("\nThe discard pile [%v] is: %v", len(table.DiscardPile), table.DiscardPile[len(table.DiscardPile)-1])
+			fmt.Printf("\n%v's hand is: %v", table.Players[i].Name, table.Players[i].Hand)
+			Action(table, &table.Players[i])
+			fmt.Printf("\n%v's hand is: %v", table.Players[i].Name, table.Players[i].Hand)
+		}
 	}
 
 	for !endRound {
@@ -110,6 +134,7 @@ func SabaccShift(table *table.Table) {
 	var shift bool = table.Dice.RollSpikeDice()
 
 	if shift {
+		fmt.Println("There's been a shift!")
 		for i := 0; i < len(table.Players); i++ {
 			var handSize int = len(table.Players[i].Hand)
 			if handSize != 0 {
@@ -117,6 +142,8 @@ func SabaccShift(table *table.Table) {
 				table.Players[i].Hand = table.SabaccDeck.Deal(handSize)
 			}
 		}
+	} else {
+		fmt.Println("No Sabacc Shift this round.")
 	}
 
 }
@@ -255,7 +282,7 @@ func Bet(table *table.Table, player *player.Player) bool {
 	var bet int
 	fmt.Println("\nPlease select an amount to bet:")
 
-	_, err := fmt.Scanf("%d", &bet)
+	_, err := fmt.Scanf("%d\n", &bet)
 	if err != nil {
 		//log.Fatalln(err)
 		fmt.Printf("Error reading user input... choose again.\n")
