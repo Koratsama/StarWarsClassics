@@ -25,20 +25,20 @@ func Start() {
 	for !gameOver {
 
 		//implement round 1
-		RoundOne(&table)
+		Round(&table)
 		//sabacc shift
 		SabaccShift(&table)
 
 		fmt.Println("Round 1 complete!")
 
 		//implement round 2
-		RoundOne(&table)
+		Round(&table)
 		//sabacc shift
 		SabaccShift(&table)
 
 		fmt.Println("Round 2 complete!")
 		//implement round 3
-		RoundOne(&table)
+		Round(&table)
 		//sabacc shift
 		SabaccShift(&table)
 
@@ -54,7 +54,7 @@ func Start() {
 			}
 			player.FoldHand()
 		}
-		gameOver = false
+		gameOver = true
 	}
 }
 
@@ -89,13 +89,13 @@ func SetupNewDeck(table *table.Table) {
 }*/
 
 /*
-Name: RoundOne
+Name: Round
 Purpose: This function executes all the steps required for the first round of a game
 of sabacc. each player will get prompted to take actions and bets. and then proceed
 to the next round.
 Parameters: table - reference to the current table.
 */
-func RoundOne(table *table.Table) {
+func Round(table *table.Table) {
 
 	var endRound bool = false
 
