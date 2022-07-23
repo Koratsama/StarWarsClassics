@@ -62,7 +62,7 @@ gets Sabacc, then the hand with the closest total value to zero wins, which is c
 hierarchy of special named Sabacc hands that can be obtained. When scoring, a positive value beats an equal 
 negative value.
 
-### Turn phase
+### 1. Turn phase
 
 Play starts with the player to the dealer's left and continues going left around the table.
 One your turn, you can stand, gain, or swap. You may only choose one.
@@ -75,7 +75,7 @@ One your turn, you can stand, gain, or swap. You may only choose one.
 
 After you stand, gain, or swap your turn is over. Once all players have had a turn, betting begins.
 
-### Betting phase
+### 2. Betting phase
 
 Players calculate their current hand value and place their bets, beginning with the player to  the dealer's left. Players can check, bet, call, raise, or junk. The cycle continues until all bets are equal.
 
@@ -93,9 +93,9 @@ to raise in this betting phase and can't raise if they started the betting and n
 5. **Junk**: The player shuffles his hand (to randomize card order) and puts it on the discard pile. This player 
 forfeits all winnings for the round and cannot play until the next round.
 
-Once all players have equaled the highest bet or junked (or all players checked), move on to the spike dice phase
+Once all players have equaled the highest bet or junked (or all players checked), move on to the spike dice phase.
 
-### Spike Dice
+### 3. Spike Dice Phase
 
 The dealer rolls both dice. If the symbols are different, the round ends. If the symbols match, everyone must note the number 
 of cards in their hand, reveal them, then place all the cards onto the discard pile, The dealer then deals each player the same
@@ -103,6 +103,18 @@ number of cards they discarded. The player to the left of the dealer is always f
 the needed cards before dealing to the next player. Then place the rest of the deck face down on the table to form a new draw 
 pile and flip over the top card onto the discard pile to start it with a new random value. If at any point the draw pile is 
 depleted, shuffle the discard pile to create a new one, then turn over the top card to start a new discard pile as usual.
+
+Repeat phases 1-3 for two more rounds to complete a single game.
+
+### Showdown
+
+At the end of the third round, players reveal their cards in order of play starting at the dealer's left.
+Hands are compated with respect to the scoring hierarchy and a winner is determined.
+- The winning player collects the game pot.
+- If a player wins with Sabacc (any hand totaling zero) that player also collects the Sabacc pot. Otherwise, the credits in the Sabacc pot for the next game.
+
+To begin a new game, the player to the left of the dealer collects the deck and dice, shuffles the cards, and is the new 
+game's dealers. Players pay the ante for the new game and games begins.
 
 </p>
 </details>
