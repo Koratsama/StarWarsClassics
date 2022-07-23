@@ -36,6 +36,8 @@ no content yet.
 1. 30 green cards with positive values 1 through 10, three each ●, ■, ▲
 2. 30 red cards with negative values -1 through -10, three each ●, ■, ▲
 3. 2 zero-value cards known as sylops (Old Corellian for "idiots")
+
+![positive cards](https://i.imgur.com/7LJoEIt.png)
     
 The three suits, known as "Staves", are shown by the shape of the pips on the cards: ● (Circle), ■ (Square), ▲ (Triangle).
 These do not have any bearing on the gameplay. These are used in Coruscant Shift. 
@@ -117,6 +119,14 @@ Hands are compated with respect to the scoring hierarchy and a winner is determi
 
 To begin a new game, the player to the left of the dealer collects the deck and dice, shuffles the cards, and is the new 
 game's dealers. Players pay the ante for the new game and games begins.
+
+<details><summary>Scoring Hierarchy</summary>
+<p>
+
+![scoring hierarchy](https://i.imgur.com/CNEbyS7.png)
+
+</p>
+</details>
 
 </p>
 </details>
