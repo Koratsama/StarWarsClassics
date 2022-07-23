@@ -18,6 +18,7 @@ this is a simple go application that let's you play 3 different types of games f
 Choose between Sabacc, Corellian Spike, and Coruscant Shift.
 Right now the goal is to get a basic menu working. The games are not available to play yet as they still need to be worked on.
 ## Corellian Spike (Black Spire Outpost Rules):
+
 ### The Deck
 
     1. 30 green cards with positive values 1 through 10, three each ●, ■, ▲
@@ -26,17 +27,21 @@ Right now the goal is to get a basic menu working. The games are not available t
     
     The three suits, known as "Staves", are shown by the shape of the pips on the cards: ● (Circle), ■ (Square), ▲ (Triangle).
     These do not have any bearing on the gameplay. These are used in Coruscant Shift. 
+
 ### Setup
 
     Choose a dealer for the first game. Hand the deck and dice to the dealer. Each subsequent game, the persont to the left of the dealer will be the new dealer.
+
 ### Ante
 
     Players must pay in to play the roun, 1 credit into the game pot and 2 credit into the sabacc pot. If a player cannot afford to pay in, that player is out of the game.
+
 ### Dealer
 
     1. Shuffle the deck, then deal two cards fave down to each player. Players can look at their cards, but must not show other players.
     2. Place the remaining deck face down in the center of play. This is the draw pile.
     3. Place the top card of the draw pile face-up on the table. This is the discard pile.
+
 ### Gameplay
 
     Each game is played in three rounds. Each round consists of a turn phase, a betting phase, and a spike dice phase.
@@ -44,6 +49,7 @@ Right now the goal is to get a basic menu working. The games are not available t
     gets Sabacc, then the hand with the closest total value to zero wins, which is called Nulrhek. There is also a 
     hierarchy of special named Sabacc hands that can be obtained. When scoring, a positive value beats an equal 
     negative value.
+
 ### Turn phase
 
     Play starts with the player to the dealer's left and continues going left around the table.
@@ -54,6 +60,7 @@ Right now the goal is to get a basic menu working. The games are not available t
             b. Discard a card from your hand, then take the top card from the draw pile.
         3. **Swap** - Take the top card from the discard pile and add it to your hand, then discard a different card from your hand.
     After you stand, gain, or swap your turn is over. Once all players have had a turn, betting begins.
+    
 ### Betting phase
 
 Players calculate their current hand value and place their bets, beginning with the player to  the dealer's left. Players can check, bet, call, raise, or junk. The cycle continues until all bets are equal.
