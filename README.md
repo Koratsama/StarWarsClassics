@@ -17,7 +17,9 @@
 this is a simple go application that let's you play 3 different types of games from the Star Wars universe!
 Choose between Sabacc, Corellian Spike, and Coruscant Shift.
 Right now the goal is to get a basic menu working. The games are not available to play yet as they still need to be worked on.
-## Corellian Spike (Black Spire Outpost Rules):
+
+<details><summary>Corellian Spike (Black Spire Outpost Rules)</summary>
+<p>
 
 ### The Deck
 
@@ -60,7 +62,7 @@ Right now the goal is to get a basic menu working. The games are not available t
             b. Discard a card from your hand, then take the top card from the draw pile.
         3. **Swap** - Take the top card from the discard pile and add it to your hand, then discard a different card from your hand.
     After you stand, gain, or swap your turn is over. Once all players have had a turn, betting begins.
-    
+
 ### Betting phase
 
 Players calculate their current hand value and place their bets, beginning with the player to  the dealer's left. Players can check, bet, call, raise, or junk. The cycle continues until all bets are equal.
@@ -89,3 +91,6 @@ number of cards they discarded. The player to the left of the dealer is always f
 the needed cards before dealing to the next player. Then place the rest of the deck face down on the table to form a new draw 
 pile and flip over the top card onto the discard pile to start it with a new random value. If at any point the draw pile is 
 depleted, shuffle the discard pile to create a new one, then turn over the top card to start a new discard pile as usual.
+
+</p>
+</details>
