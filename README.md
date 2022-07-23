@@ -26,6 +26,8 @@ no content yet.
 </p>
 </details>
 
+---
+
 <details><summary>Corellian Spike (Black Spire Outpost Rules)</summary>
 <p>
 
@@ -119,6 +121,8 @@ game's dealers. Players pay the ante for the new game and games begins.
 </p>
 </details>
 
+---
+
 <details><summary>Coruscant Shift</summary>
 <p>
 
@@ -126,3 +130,5 @@ no content yet.
 
 </p>
 </details>
+
+---
