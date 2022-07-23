@@ -18,6 +18,14 @@ this is a simple go application that let's you play 3 different types of games f
 Choose between Sabacc, Corellian Spike, and Coruscant Shift.
 Right now the goal is to get a basic menu working. The games are not available to play yet as they still need to be worked on.
 
+<details><summary>Sabacc (classic 76-card variant)</summary>
+<p>
+
+no content yet.
+
+</p>
+</details>
+
 <details><summary>Corellian Spike (Black Spire Outpost Rules)</summary>
 <p>
 
@@ -27,16 +35,18 @@ Right now the goal is to get a basic menu working. The games are not available t
     2. 30 red cards with negative values -1 through -10, three each ●, ■, ▲
     3. 2 zero-value cards known as sylops (Old Corellian for "idiots")
     
-    The three suits, known as "Staves", are shown by the shape of the pips on the cards: ● (Circle), ■ (Square), ▲ (Triangle).
-    These do not have any bearing on the gameplay. These are used in Coruscant Shift. 
+The three suits, known as "Staves", are shown by the shape of the pips on the cards: ● (Circle), ■ (Square), ▲ (Triangle).
+These do not have any bearing on the gameplay. These are used in Coruscant Shift. 
 
 ### Setup
 
-    Choose a dealer for the first game. Hand the deck and dice to the dealer. Each subsequent game, the persont to the left of the dealer will be the new dealer.
+Choose a dealer for the first game. Hand the deck and dice to the dealer. Each subsequent game, the persont to the left of
+the dealer will be the new dealer.
 
 ### Ante
 
-    Players must pay in to play the roun, 1 credit into the game pot and 2 credit into the sabacc pot. If a player cannot afford to pay in, that player is out of the game.
+Players must pay in to play the roun, 1 credit into the game pot and 2 credit into the sabacc pot. If a player cannot afford 
+to pay in, that player is out of the game.
 
 ### Dealer
 
@@ -46,22 +56,24 @@ Right now the goal is to get a basic menu working. The games are not available t
 
 ### Gameplay
 
-    Each game is played in three rounds. Each round consists of a turn phase, a betting phase, and a spike dice phase.
-    The goal of the game is to have the best hand with a total value of zero, which is called Sabacc, or if no player 
-    gets Sabacc, then the hand with the closest total value to zero wins, which is called Nulrhek. There is also a 
-    hierarchy of special named Sabacc hands that can be obtained. When scoring, a positive value beats an equal 
-    negative value.
+Each game is played in three rounds. Each round consists of a turn phase, a betting phase, and a spike dice phase.
+The goal of the game is to have the best hand with a total value of zero, which is called Sabacc, or if no player 
+gets Sabacc, then the hand with the closest total value to zero wins, which is called Nulrhek. There is also a 
+hierarchy of special named Sabacc hands that can be obtained. When scoring, a positive value beats an equal 
+negative value.
 
 ### Turn phase
 
-    Play starts with the player to the dealer's left and continues going left around the table.
-    One your turn, you can stand, gain, or swap. You may only choose one.
-        1. **Stand** - Retain your current hand for this round and end your turn.
-        2. **Gain** - To gain a card from the draw pile, you have two options:
-            a. Take the top card from the draw pile.
-            b. Discard a card from your hand, then take the top card from the draw pile.
-        3. **Swap** - Take the top card from the discard pile and add it to your hand, then discard a different card from your hand.
-    After you stand, gain, or swap your turn is over. Once all players have had a turn, betting begins.
+Play starts with the player to the dealer's left and continues going left around the table.
+One your turn, you can stand, gain, or swap. You may only choose one.
+    
+    1. **Stand** - Retain your current hand for this round and end your turn.
+    2. **Gain** - To gain a card from the draw pile, you have two options:
+        a. Take the top card from the draw pile.
+        b. Discard a card from your hand, then take the top card from the draw pile.
+    3. **Swap** - Take the top card from the discard pile and add it to your hand, then discard a different card from your hand.
+
+After you stand, gain, or swap your turn is over. Once all players have had a turn, betting begins.
 
 ### Betting phase
 
@@ -91,6 +103,14 @@ number of cards they discarded. The player to the left of the dealer is always f
 the needed cards before dealing to the next player. Then place the rest of the deck face down on the table to form a new draw 
 pile and flip over the top card onto the discard pile to start it with a new random value. If at any point the draw pile is 
 depleted, shuffle the discard pile to create a new one, then turn over the top card to start a new discard pile as usual.
+
+</p>
+</details>
+
+<details><summary>Coruscant Shift</summary>
+<p>
+
+no content yet.
 
 </p>
 </details>
