@@ -138,7 +138,8 @@ func SabaccShift(table *table.Table) {
 		for i := 0; i < len(table.Players); i++ {
 			var handSize int = len(table.Players[i].Hand)
 			if handSize != 0 {
-				table.Players[i].Discard(handSize)
+				table.DiscardPile = append(table.DiscardPile, table.Players[i].Discard(handSize))
+				//table.Players[i].Discard(handSize)
 				table.Players[i].Hand = table.SabaccDeck.Deal(handSize)
 			}
 		}
@@ -187,17 +188,11 @@ func Action(table *table.Table, player *player.Player) {
 /*
 Name: Gain
 Purpose: The Gain function is for the player to draw 1 from the top of
-the deck. The user should then be able to decide to keep or immediately discard
-the new card into the discard pile.
+the deck. The user has to keep this card.
 Parameters: table, player - reference to the current table and player taking action.
 */
 func Gain(table *table.Table, player *player.Player) {
 	player.Hand = append(player.Hand, table.SabaccDeck.Deal(1)...)
-
-	//TODO: Double check the rule on discarding the draw. I don't know if you're allowed to discard.
-	if rand.Intn(2) == 1 {
-		table.DiscardPile = append(table.DiscardPile, player.Discard(len(player.Hand)))
-	}
 }
 
 /*
@@ -207,6 +202,7 @@ their hand into the discard pile and draw a new one from the top of the deck.
 Parameters: table, player - reference to the current table and player taking action.
 */
 func Discard(table *table.Table, player *player.Player) {
+	//TODO: choose which card you want to discard.
 	table.DiscardPile = append(table.DiscardPile, player.Discard(rand.Intn(len(player.Hand)-1)+1))
 	player.Hand = append(player.Hand, table.SabaccDeck.Deal(1)...)
 }
