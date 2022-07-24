@@ -50,7 +50,8 @@ func TestGain(t *testing.T) {
 		t.Fail()
 	}
 
-	if len(testPlayer.Hand) != 3 && len(table.DiscardPile) != 2 {
+	//player must keep the card they draw. so there has to be 3 at this point.
+	if len(testPlayer.Hand) != 3 {
 		fmt.Println("The test player or the discard pile did not gain a card.")
 		t.Fail()
 	}
