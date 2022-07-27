@@ -153,7 +153,7 @@ func TestBetHappyPath(t *testing.T) {
 	fmt.Printf("\n%v's hand is: %v\n", testPlayer.Name, testPlayer.Hand)
 	var endBet = sabacc.Bet(&table, &testPlayer)
 
-	if testPlayer.Bet == 0 || testPlayer.Credits == playerCredits {
+	if testPlayer.Bet == 0 || testPlayer.Credits != playerCredits-30 {
 		fmt.Println("The test player did not bet.")
 		fmt.Printf("%v's bet is: %v and their total credits are %v.\n", testPlayer.Name, testPlayer.Bet, testPlayer.Credits)
 		t.Fail()

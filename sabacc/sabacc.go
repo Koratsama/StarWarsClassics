@@ -290,11 +290,22 @@ func Bet(table *table.Table, player *player.Player) bool {
 		return false
 	}
 	if bet == table.MaxBet {
+		if bet > player.Bet+player.Credits {
+			bet = player.Bet + player.Credits
+		}
 		fmt.Printf("%v called with %v credits\n", player.Name, bet)
+		//if players bet is equal to max bet subtract the difference between the
+		//called bet and the players current bet
+		player.Credits = player.Credits - (bet - player.Bet)
 	}
 	if bet > table.MaxBet {
+		if bet > player.Bet+player.Credits {
+			bet = player.Bet + player.Credits
+		}
 		fmt.Printf("%v bet %v credits\n", player.Name, bet)
 		table.MaxBet = bet
+		//subtract the difference between the new max bet and the players current bet.
+		player.Credits = player.Credits - (bet - player.Bet)
 	}
 	player.Bet = bet
 	return true
