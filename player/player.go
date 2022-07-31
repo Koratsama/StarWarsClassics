@@ -8,6 +8,7 @@ type Player struct {
 	Credits  int
 	Position int
 	Bet      int
+	AllIn    bool
 }
 
 /*
