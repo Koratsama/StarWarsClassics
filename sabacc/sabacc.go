@@ -112,6 +112,10 @@ func Round(table *table.Table) {
 		//loop for betting.
 		for i := 0; i < len(table.Players); i++ {
 			if len(table.Players[i].Hand) != 0 {
+				if table.Players[i].AllIn {
+					fmt.Printf("\n%v is all in already.\n", table.Players[i].Name)
+					continue
+				}
 				fmt.Printf("\nThe discard pile [%v] is: %v", len(table.DiscardPile), table.DiscardPile[len(table.DiscardPile)-1])
 				fmt.Printf("\n%v's hand is: %v", table.Players[i].Name, table.Players[i].Hand)
 				fmt.Printf("\nCurrent bet is: %v", table.MaxBet)
@@ -286,15 +290,46 @@ func Bet(table *table.Table, player *player.Player) bool {
 	}
 
 	if bet < table.MaxBet {
-		fmt.Printf("%v did not bet the minimum required: %v\n", player.Name, table.MaxBet)
-		return false
+		if bet > player.Bet+player.Credits {
+			fmt.Printf("%v does not have enough credits to bet %v. Total Credits: %v\n", player.Name, bet, player.Bet+player.Credits)
+			return false
+		} else if bet < player.Bet+player.Credits {
+			fmt.Printf("%v did not bet the minimum required: %v\n", player.Name, table.MaxBet)
+			return false
+		} else if bet == player.Bet+player.Credits {
+			fmt.Printf("%v called with %v credits\n", player.Name, bet)
+			fmt.Printf("%v is all in!\n", player.Name)
+			player.AllIn = true
+		}
 	}
 	if bet == table.MaxBet {
-		fmt.Printf("%v called with %v credits\n", player.Name, bet)
+		if bet > player.Bet+player.Credits {
+			fmt.Printf("%v does not have enough credits to bet %v. Total Credits: %v\n", player.Name, bet, player.Bet+player.Credits)
+			return false
+		} else {
+			fmt.Printf("%v called with %v credits\n", player.Name, bet)
+			if bet == player.Bet+player.Credits {
+				fmt.Printf("%v is all in!\n", player.Name)
+				player.AllIn = true
+			}
+		}
+		//if players bet is equal to max bet subtract the difference between the
+		//called bet and the players current bet
+		player.Credits = player.Credits - (bet - player.Bet)
 	}
 	if bet > table.MaxBet {
+		if bet > player.Bet+player.Credits {
+			fmt.Printf("%v does not have enough credits to bet %v. Total Credits: %v\n", player.Name, bet, player.Bet+player.Credits)
+			return false
+		}
 		fmt.Printf("%v bet %v credits\n", player.Name, bet)
+		if bet == player.Bet+player.Credits {
+			fmt.Printf("%v is all in!\n", player.Name)
+			player.AllIn = true
+		}
 		table.MaxBet = bet
+		//subtract the difference between the new max bet and the players current bet.
+		player.Credits = player.Credits - (bet - player.Bet)
 	}
 	player.Bet = bet
 	return true
@@ -336,5 +371,10 @@ func endBetting(table *table.Table) bool {
 			return false
 		}
 	}
+
+	for i := 0; i < len(table.Players); i++ {
+		table.Players[i].Bet = 0
+	}
+	table.MaxBet = 0
 	return true
 }
