@@ -2,6 +2,7 @@ package sabacc
 
 import (
 	"fmt"
+	"math"
 	"math/rand"
 	"time"
 
@@ -48,12 +49,24 @@ func Start() {
 		fmt.Printf("\nThere are %v cards left in the deck.", len(table.SabaccDeck.Cards))
 		//show hands
 		//decide winner
+		var winner player.Player = table.Players[0]
 		for _, player := range table.Players {
+			if len(player.Hand) >= 2 {
+				if int(math.Abs(float64(player.HandValue))) == int(math.Abs(float64(winner.HandValue))) {
+					//figure out who wins with hand rules
+					winner = decideWinner(winner, player)
+				} else if int(math.Abs(float64(player.HandValue))) < int(math.Abs(float64(winner.HandValue))) {
+					winner = player
+				}
+			}
 			if len(player.Hand) != 0 {
-				fmt.Printf("\n%v's hand is: %v", player.Name, player.Hand)
+				fmt.Printf("\n%v's hand total is: %v - %v", player.Name, player.HandValue, player.Hand)
 			}
 			player.FoldHand()
 		}
+		fmt.Printf("\n%v wins!! hand total is: %v - %v", winner.Name, winner.HandValue, winner.Hand)
+		//TODO: award pot to the winner
+
 		gameOver = true
 	}
 }
@@ -145,6 +158,7 @@ func SabaccShift(table *table.Table) {
 				table.DiscardPile = append(table.DiscardPile, table.Players[i].Discard(handSize))
 				//table.Players[i].Discard(handSize)
 				table.Players[i].Hand = table.SabaccDeck.Deal(handSize)
+				table.Players[i].UpdateHandValue()
 			}
 		}
 	} else {
@@ -197,6 +211,7 @@ Parameters: table, player - reference to the current table and player taking act
 */
 func Gain(table *table.Table, player *player.Player) {
 	player.Hand = append(player.Hand, table.SabaccDeck.Deal(1)...)
+	player.UpdateHandValue()
 }
 
 /*
@@ -209,6 +224,7 @@ func Discard(table *table.Table, player *player.Player) {
 	//TODO: choose which card you want to discard.
 	table.DiscardPile = append(table.DiscardPile, player.Discard(rand.Intn(len(player.Hand)-1)+1))
 	player.Hand = append(player.Hand, table.SabaccDeck.Deal(1)...)
+	player.UpdateHandValue()
 }
 
 /*
@@ -222,6 +238,7 @@ func Swap(table *table.Table, player *player.Player) {
 	table.DiscardPile = table.DiscardPile[:len(table.DiscardPile)-1]
 	table.DiscardPile = append(table.DiscardPile, player.Discard(rand.Intn(len(player.Hand)-1)+1))
 	player.Hand = append(player.Hand, swappedCard)
+	player.UpdateHandValue()
 }
 
 /*
@@ -332,6 +349,7 @@ func Bet(table *table.Table, player *player.Player) bool {
 		player.Credits = player.Credits - (bet - player.Bet)
 	}
 	player.Bet = bet
+	table.MainPot += bet
 	return true
 }
 
@@ -377,4 +395,10 @@ func endBetting(table *table.Table) bool {
 	}
 	table.MaxBet = 0
 	return true
+}
+
+func decideWinner(currentWinner player.Player, nextPlayer player.Player) player.Player {
+
+	//TODO: logic to decide real winner if there is a tie
+	return currentWinner
 }

@@ -3,12 +3,13 @@ package player
 import "github.com/Koratsama/StarWarsClassics/deck"
 
 type Player struct {
-	Name     string
-	Hand     []deck.Card
-	Credits  int
-	Position int
-	Bet      int
-	AllIn    bool
+	Name      string
+	Hand      []deck.Card
+	Credits   int
+	Position  int
+	Bet       int
+	AllIn     bool
+	HandValue int
 }
 
 /*
@@ -52,4 +53,21 @@ Parameters: None
 */
 func (re *Player) RemoveLastCard() []deck.Card {
 	return re.Hand[:len(re.Hand)-1]
+}
+
+/*
+Name: UpdateHandValue
+Purpose: the purpose of the function is to calculate the players hand value whenever
+the player takes an action that changes their hand such as Gain, Discard, Swap.
+After each of these actions this function should be called to recalculate the
+player's hand value.
+Paramets: None
+*/
+func (re *Player) UpdateHandValue() {
+	total := 0
+	hand := re.Hand
+	for i := range hand {
+		total += hand[i].Value
+	}
+	re.HandValue = total
 }
