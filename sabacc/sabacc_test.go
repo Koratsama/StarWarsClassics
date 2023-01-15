@@ -2,7 +2,6 @@ package sabacc_test
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"testing"
@@ -125,7 +124,8 @@ func TestFold(t *testing.T) {
 
 func TestBetHappyPath(t *testing.T) {
 	content := []byte("30")
-	tmpfile, err := ioutil.TempFile("", "tempfile")
+	//tmpfile, err := ioutil.TempFile("", "tempfile")
+	tmpfile, err := os.CreateTemp("", "tempfile")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -171,7 +171,7 @@ func TestBetHappyPath(t *testing.T) {
 
 func TestBetInvalidInput(t *testing.T) {
 	content := []byte("thirty")
-	tmpfile, err := ioutil.TempFile("", "tempfile")
+	tmpfile, err := os.CreateTemp("", "tempfile")
 	if err != nil {
 		log.Fatal(err)
 	}
