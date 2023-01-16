@@ -64,7 +64,7 @@ func Start() {
 			}
 			player.FoldHand()
 		}
-		fmt.Printf("\n%v wins!! hand total is: %v - %v", winner.Name, winner.HandValue, winner.Hand)
+		fmt.Printf("\n%v wins %v credits!! hand total is: %v - %v", winner.Name, table.MainPot, winner.HandValue, winner.Hand)
 		//TODO: award pot to the winner
 
 		gameOver = true

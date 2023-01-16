@@ -10,7 +10,8 @@
             "request": "launch",
             "mode": "auto",
             "program": "main.go",
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "dlvFlags": ["--check-go-version=false"] 
         }
     ]
 }
