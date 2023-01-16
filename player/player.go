@@ -1,6 +1,8 @@
 package player
 
 import (
+	"math"
+
 	"github.com/Koratsama/StarWarsClassics/deck"
 )
 
@@ -89,10 +91,147 @@ func (re *Player) UpdateHandValue() {
 	if total == 0 {
 		re.HandCategory = "Sabacc"
 		//check what kind of Sabacc
-		if len(hand) == 2 && hand[0].Value == 0 && hand[1].Value == 0 {
+		if isPureSabacc(hand) {
 			re.HandSubCategory = "Pure Sabacc"
+		} else if isFullSabacc(hand) {
+			re.HandSubCategory = "Full Sabacc"
+		} else if isFleet(hand) {
+			re.HandSubCategory = "Fleet"
+		} else if isPrimeSabacc(hand) {
+			re.HandSubCategory = "Prime Sabacc"
+		} else if isYeeHaa(hand) {
+			re.HandSubCategory = "Yee-Haa"
 		}
 	} else {
 		re.HandCategory = "Nulrhek"
+	}
+}
+
+func isPureSabacc(hand []deck.Card) bool {
+
+	if len(hand) == 2 && hand[0].Value == 0 && hand[1].Value == 0 {
+		return true
+	} else {
+		return false
+	}
+}
+
+func isFullSabacc(hand []deck.Card) bool {
+
+	positiveTens := 0
+	negativeTens := 0
+	sylop := 0
+
+	if len(hand) != 5 {
+		return false
+	} else {
+		for i := range hand {
+			if hand[i].Value == -10 {
+				negativeTens++
+			} else if hand[i].Value == 10 {
+				positiveTens++
+			} else if hand[i].Value == 0 {
+				sylop++
+			} else {
+				return false
+			}
+		}
+	}
+
+	if positiveTens != 2 || negativeTens != 2 || sylop != 1 {
+		return false
+	} else {
+		return true
+	}
+}
+
+func isFleet(hand []deck.Card) bool {
+	//four of a kind with a sylop
+	fourOfAKindValue := 0
+	fourOfAKind := 0
+	sylop := 0
+
+	if len(hand) != 5 {
+		return false
+	} else {
+		for i := range hand {
+			if hand[i].Value == 0 {
+				sylop++
+			} else if hand[i].Value != 0 {
+				if fourOfAKindValue == 0 {
+					fourOfAKindValue = int(math.Abs(float64(hand[i].Value)))
+				} else if fourOfAKindValue != 0 && int(math.Abs(float64(hand[i].Value))) != fourOfAKindValue {
+					return false
+				}
+			} else {
+				fourOfAKind++
+			}
+		}
+	}
+
+	if sylop != 1 || fourOfAKind != 4 {
+		return false
+	} else {
+		return true
+	}
+}
+
+func isPrimeSabacc(hand []deck.Card) bool {
+
+	positiveTens := 0
+	negativeTens := 0
+	sylop := 0
+
+	if len(hand) != 3 {
+		return false
+	} else {
+		for i := range hand {
+			if hand[i].Value == -10 {
+				negativeTens++
+			} else if hand[i].Value == 10 {
+				positiveTens++
+			} else if hand[i].Value == 0 {
+				sylop++
+			} else {
+				return false
+			}
+		}
+	}
+
+	if positiveTens != 1 || negativeTens != 1 || sylop != 1 {
+		return false
+	} else {
+		return true
+	}
+}
+
+func isYeeHaa(hand []deck.Card) bool {
+	//pair with a sylop
+	pairValue := 0
+	pair := 0
+	sylop := 0
+
+	if len(hand) != 5 {
+		return false
+	} else {
+		for i := range hand {
+			if hand[i].Value == 0 {
+				sylop++
+			} else if hand[i].Value != 0 {
+				if pairValue == 0 {
+					pairValue = int(math.Abs(float64(hand[i].Value)))
+				} else if pairValue != 0 && int(math.Abs(float64(hand[i].Value))) != pairValue {
+					return false
+				}
+			} else {
+				pair++
+			}
+		}
+	}
+
+	if sylop != 1 || pair != 2 {
+		return false
+	} else {
+		return true
 	}
 }
