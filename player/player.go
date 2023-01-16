@@ -1,15 +1,21 @@
 package player
 
-import "github.com/Koratsama/StarWarsClassics/deck"
+import (
+	"github.com/Koratsama/StarWarsClassics/deck"
+)
 
 type Player struct {
-	Name      string
-	Hand      []deck.Card
-	Credits   int
-	Position  int
-	Bet       int
-	AllIn     bool
-	HandValue int
+	Name                string
+	Hand                []deck.Card
+	Credits             int
+	Position            int
+	Bet                 int
+	AllIn               bool
+	HandValue           int
+	HandCategory        string
+	HandSubCategory     string
+	PositiveCards       int
+	HighestPositiveCard deck.Card
 }
 
 /*
@@ -61,13 +67,32 @@ Purpose: the purpose of the function is to calculate the players hand value when
 the player takes an action that changes their hand such as Gain, Discard, Swap.
 After each of these actions this function should be called to recalculate the
 player's hand value.
-Paramets: None
+Parameters: None
 */
 func (re *Player) UpdateHandValue() {
 	total := 0
+	re.PositiveCards = 0
+	re.HighestPositiveCard = re.Hand[0]
+
 	hand := re.Hand
 	for i := range hand {
+		if hand[i].Value > re.HighestPositiveCard.Value {
+			re.HighestPositiveCard = hand[i]
+		}
+		if hand[i].Value > 0 {
+			re.PositiveCards += 1
+		}
 		total += hand[i].Value
 	}
 	re.HandValue = total
+
+	if total == 0 {
+		re.HandCategory = "Sabacc"
+		//check what kind of Sabacc
+		if len(hand) == 2 && hand[0].Value == 0 && hand[1].Value == 0 {
+			re.HandSubCategory = "Pure Sabacc"
+		}
+	} else {
+		re.HandCategory = "Nulrhek"
+	}
 }
