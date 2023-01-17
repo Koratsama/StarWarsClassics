@@ -15,6 +15,7 @@ type Player struct {
 	Bet                 int
 	AllIn               bool
 	HasSylop            bool
+	HandRank            int
 	HandValue           int
 	HandCategory        string
 	HandSubCategory     string
@@ -77,6 +78,7 @@ Parameters: None
 */
 func (re *Player) UpdateHandValue() {
 	total := 0
+	re.HandRank = 0
 	re.PositiveCards = 0
 	re.PositiveCardTotal = 0
 	re.HighestPositiveCard = re.Hand[0]
@@ -102,30 +104,46 @@ func (re *Player) UpdateHandValue() {
 		//check what kind of Sabacc
 		if isPureSabacc(hand) {
 			re.HandSubCategory = "Pure Sabacc"
+			re.HandRank = 1
 		} else if isFullSabacc(hand) {
 			re.HandSubCategory = "Full Sabacc"
+			re.HandRank = 2
 		} else if isFleet(hand) {
 			re.HandSubCategory = "Fleet"
+			re.HandRank = 3
 		} else if isPrimeSabacc(hand) {
 			re.HandSubCategory = "Prime Sabacc"
+			re.HandRank = 4
 		} else if isYeeHaa(hand) {
 			re.HandSubCategory = "Yee-Haa"
+			re.HandRank = 5
 			//at this point the player doesn't have a sylop
 		} else if isRhylet(hand) {
 			re.HandSubCategory = "Rhylet"
+			re.HandRank = 6
 		} else if isSquadron(hand) {
 			re.HandSubCategory = "Squadron"
+			re.HandRank = 7
 		} else if isGeeWhiz(hand) {
 			re.HandSubCategory = "Gee Whiz!"
+			re.HandRank = 8
 		} else if isStraightStaves(hand) {
 			re.HandSubCategory = "Straight Staves!"
+			re.HandRank = 9
 		} else if isBanthasWild(hand) {
 			re.HandSubCategory = "Banthas Wild"
+			re.HandRank = 10
 		} else if isRuleOfTwo(hand) {
 			re.HandSubCategory = "Rule of Two"
+			re.HandRank = 11
+		} else {
+			re.HandSubCategory = "none"
+			re.HandRank = 12
 		}
 	} else {
 		re.HandCategory = "Nulrhek"
+		re.HandSubCategory = "none"
+		re.HandRank = 14
 	}
 }
 
@@ -382,17 +400,18 @@ func isStraightStaves(hand []deck.Card) bool {
 		return int(math.Abs(float64(hand[i].Value))) < int(math.Abs(float64(hand[j].Value)))
 	})
 
-	first := int(math.Abs(float64(hand[0].Value)))
-	second := int(math.Abs(float64(hand[1].Value)))
-	third := int(math.Abs(float64(hand[2].Value)))
-	fourth := int(math.Abs(float64(hand[3].Value)))
-
 	if len(hand) != 4 {
 		return false
-	} else if first == second-1 && second == third-1 && third == fourth-1 {
-		return true
 	} else {
-		return false
+		first := int(math.Abs(float64(hand[0].Value)))
+		second := int(math.Abs(float64(hand[1].Value)))
+		third := int(math.Abs(float64(hand[2].Value)))
+		fourth := int(math.Abs(float64(hand[3].Value)))
+		if first == second-1 && second == third-1 && third == fourth-1 {
+			return true
+		} else {
+			return false
+		}
 	}
 }
 

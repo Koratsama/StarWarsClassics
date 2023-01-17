@@ -64,7 +64,8 @@ func Start() {
 			}
 			player.FoldHand()
 		}
-		fmt.Printf("\n%v wins %v credits!! hand total is: %v - %v", winner.Name, table.MainPot, winner.HandValue, winner.Hand)
+		fmt.Printf("\n\n%v wins %v credits!! \nTheir hand is: %v - %v", winner.Name, table.MainPot, winner.HandCategory, winner.Hand)
+		fmt.Printf("\nTheir hand value is: %v \nThe subCategory was %v", winner.HandValue, winner.HandSubCategory)
 		//TODO: award pot to the winner
 
 		gameOver = true
@@ -115,9 +116,9 @@ func Round(table *table.Table) {
 	for i := 0; i < len(table.Players); i++ {
 		if len(table.Players[i].Hand) != 0 {
 			fmt.Printf("\nThe discard pile [%v] is: %v", len(table.DiscardPile), table.DiscardPile[len(table.DiscardPile)-1])
-			fmt.Printf("\n%v's hand is: %v", table.Players[i].Name, table.Players[i].Hand)
+			fmt.Printf("\n%v's hand is: %v\n", table.Players[i].Name, table.Players[i].Hand)
 			Action(table, &table.Players[i])
-			fmt.Printf("\n%v's hand is: %v", table.Players[i].Name, table.Players[i].Hand)
+			fmt.Printf("\n%v's hand is: %v\n", table.Players[i].Name, table.Players[i].Hand)
 		}
 	}
 
@@ -131,7 +132,7 @@ func Round(table *table.Table) {
 				}
 				fmt.Printf("\nThe discard pile [%v] is: %v", len(table.DiscardPile), table.DiscardPile[len(table.DiscardPile)-1])
 				fmt.Printf("\n%v's hand is: %v", table.Players[i].Name, table.Players[i].Hand)
-				fmt.Printf("\nCurrent bet is: %v", table.MaxBet)
+				fmt.Printf("\nCurrent bet is: %v, %v's bet is: %v", table.MaxBet, table.Players[i].Name, table.Players[i].Bet)
 				BetAction(table, &table.Players[i])
 			}
 		}
@@ -249,6 +250,7 @@ Parameters: table, player - reference to the current table and player taking act
 */
 func Stand(table *table.Table, player *player.Player) {
 	fmt.Printf("%v stands\n", player.Name)
+	player.UpdateHandValue()
 }
 
 /*
@@ -400,5 +402,75 @@ func endBetting(table *table.Table) bool {
 func decideWinner(currentWinner player.Player, nextPlayer player.Player) player.Player {
 
 	//TODO: logic to decide real winner if there is a tie
-	return currentWinner
+	if currentWinner.HandRank < nextPlayer.HandRank {
+		return currentWinner
+	} else if currentWinner.HandRank > nextPlayer.HandRank {
+		return nextPlayer
+	} else {
+		if currentWinner.HandCategory == "Nulrhek" && nextPlayer.HandCategory == "Nulrhek" {
+			//positive score
+			if int(math.Abs(float64(currentWinner.HandValue))) < int(math.Abs(float64(nextPlayer.HandValue))) {
+				return currentWinner
+			} else if int(math.Abs(float64(currentWinner.HandValue))) > int(math.Abs(float64(nextPlayer.HandValue))) {
+				return nextPlayer
+			} else if int(math.Abs(float64(currentWinner.HandValue))) == int(math.Abs(float64(nextPlayer.HandValue))) {
+				if currentWinner.HandValue > 0 && nextPlayer.HandValue < 0 {
+					return currentWinner
+				} else if currentWinner.HandValue < 0 && nextPlayer.HandValue > 0 {
+					return nextPlayer
+				} else {
+					//positive score with most cards
+					if currentWinner.PositiveCards > nextPlayer.PositiveCards {
+						return currentWinner
+					} else if currentWinner.PositiveCards < nextPlayer.PositiveCards {
+						return nextPlayer
+					} else {
+						//positive score with the highest total value of all positive cards
+						if currentWinner.PositiveCardTotal > nextPlayer.PositiveCardTotal {
+							return currentWinner
+						} else if currentWinner.PositiveCardTotal < nextPlayer.PositiveCardTotal {
+							return nextPlayer
+						} else {
+							//positive score with the highest single positive card value
+							if currentWinner.HighestPositiveCard.Value > nextPlayer.HighestPositiveCard.Value {
+								return currentWinner
+							} else if currentWinner.HighestPositiveCard.Value < nextPlayer.HighestPositiveCard.Value {
+								return nextPlayer
+							} else {
+								//implement single blind draw
+								return currentWinner
+							}
+						}
+					}
+				}
+			}
+		} else if (currentWinner.HandCategory == "Sabbac" && nextPlayer.HandCategory == "Sabbac") &&
+			currentWinner.HandSubCategory == nextPlayer.HandSubCategory {
+			//most cards
+			if len(currentWinner.Hand) > len(nextPlayer.Hand) {
+				return currentWinner
+			} else if len(currentWinner.Hand) < len(nextPlayer.Hand) {
+				return nextPlayer
+			} else {
+				//hightest total value of all positive cards
+				if currentWinner.PositiveCardTotal > nextPlayer.PositiveCardTotal {
+					return currentWinner
+				} else if currentWinner.PositiveCardTotal < nextPlayer.PositiveCardTotal {
+					return nextPlayer
+				} else {
+					//highest single positive card value
+					if currentWinner.HighestPositiveCard.Value > nextPlayer.HighestPositiveCard.Value {
+						return currentWinner
+					} else if currentWinner.HighestPositiveCard.Value < nextPlayer.HighestPositiveCard.Value {
+						return nextPlayer
+					} else {
+						//implement single blind draw
+						return currentWinner
+					}
+				}
+			}
+		}
+		//implement single blind draw
+		return currentWinner
+	}
 }
