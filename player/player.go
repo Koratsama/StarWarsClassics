@@ -2,6 +2,7 @@ package player
 
 import (
 	"math"
+	"sort"
 
 	"github.com/Koratsama/StarWarsClassics/deck"
 )
@@ -18,6 +19,7 @@ type Player struct {
 	HandCategory        string
 	HandSubCategory     string
 	PositiveCards       int
+	PositiveCardTotal   int
 	HighestPositiveCard deck.Card
 }
 
@@ -76,6 +78,7 @@ Parameters: None
 func (re *Player) UpdateHandValue() {
 	total := 0
 	re.PositiveCards = 0
+	re.PositiveCardTotal = 0
 	re.HighestPositiveCard = re.Hand[0]
 
 	hand := re.Hand
@@ -85,6 +88,7 @@ func (re *Player) UpdateHandValue() {
 		}
 		if hand[i].Value > 0 {
 			re.PositiveCards += 1
+			re.PositiveCardTotal += hand[i].Value
 		}
 		if hand[i].Value == 0 {
 			re.HasSylop = true
@@ -113,11 +117,11 @@ func (re *Player) UpdateHandValue() {
 			re.HandSubCategory = "Squadron"
 		} else if isGeeWhiz(hand) {
 			re.HandSubCategory = "Gee Whiz!"
-		} else if isYeeHaa(hand) {
+		} else if isStraightStaves(hand) {
 			re.HandSubCategory = "Straight Staves!"
-		} else if isYeeHaa(hand) {
+		} else if isBanthasWild(hand) {
 			re.HandSubCategory = "Banthas Wild"
-		} else if isYeeHaa(hand) {
+		} else if isRuleOfTwo(hand) {
 			re.HandSubCategory = "Rule of Two"
 		}
 	} else {
@@ -373,22 +377,67 @@ func isGeeWhiz(hand []deck.Card) bool {
 
 func isStraightStaves(hand []deck.Card) bool {
 	//fix this, try sorting instead
-	minCardValue := int(math.Abs(float64(hand[0].Value)))
-	maxCardValue := int(math.Abs(float64(hand[0].Value)))
-	middleCardValue1 := int(math.Abs(float64(hand[0].Value)))
-	middleCardValue2 := int(math.Abs(float64(hand[0].Value)))
+
+	sort.Slice(hand, func(i, j int) bool {
+		return int(math.Abs(float64(hand[i].Value))) < int(math.Abs(float64(hand[j].Value)))
+	})
+
+	first := int(math.Abs(float64(hand[0].Value)))
+	second := int(math.Abs(float64(hand[1].Value)))
+	third := int(math.Abs(float64(hand[2].Value)))
+	fourth := int(math.Abs(float64(hand[3].Value)))
 
 	if len(hand) != 4 {
 		return false
+	} else if first == second-1 && second == third-1 && third == fourth-1 {
+		return true
+	} else {
+		return false
+	}
+}
+
+func isBanthasWild(hand []deck.Card) bool {
+
+	valueMap := make(map[int]int)
+
+	if len(hand) < 3 {
+		return false
 	} else {
 		for i := range hand {
-			if int(math.Abs(float64(hand[i].Value))) < minCardValue {
-				minCardValue = int(math.Abs(float64(hand[i].Value)))
-			} else if int(math.Abs(float64(hand[i].Value))) > maxCardValue {
-				maxCardValue = int(math.Abs(float64(hand[i].Value)))
-			} else if int(math.Abs(float64(hand[i].Value))) > minCardValue && int(math.Abs(float64(hand[i].Value))) < maxCardValue {
+			valueMap[int(math.Abs(float64(hand[i].Value)))]++
+		}
 
+		for i := range hand {
+			if valueMap[int(math.Abs(float64(hand[i].Value)))] == 3 {
+				return true
 			}
+		}
+	}
+	return false
+}
+
+func isRuleOfTwo(hand []deck.Card) bool {
+
+	valueMap := make(map[int]int)
+	numOfPairs := 0
+
+	if len(hand) < 3 {
+		return false
+	} else {
+		for i := range hand {
+			valueMap[int(math.Abs(float64(hand[i].Value)))]++
+		}
+
+		for i := range hand {
+			if valueMap[int(math.Abs(float64(hand[i].Value)))] == 2 {
+				numOfPairs++
+			}
+		}
+
+		if numOfPairs == 2 {
+			return true
+		} else {
+			return false
 		}
 	}
 }
