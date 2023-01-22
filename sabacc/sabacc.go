@@ -143,8 +143,7 @@ func SabaccShift(table *table.Table) {
 		for i := 0; i < len(table.Players); i++ {
 			var handSize int = len(table.Players[i].Hand)
 			if handSize != 0 {
-				table.DiscardPile = append(table.DiscardPile, table.Players[i].Discard(handSize))
-				//table.Players[i].Discard(handSize)
+				table.DiscardPile = append(table.DiscardPile, table.Players[i].FoldHand()...)
 				table.Players[i].Hand = table.SabaccDeck.Deal(handSize)
 				table.Players[i].UpdateHandValue()
 			}
@@ -210,6 +209,9 @@ Parameters: table, player - reference to the current table and player taking act
 */
 func Discard(table *table.Table, player *player.Player) {
 	//TODO: choose which card you want to discard.
+	t := time.Now()
+	rand.Seed(int64(t.Nanosecond()))
+
 	table.DiscardPile = append(table.DiscardPile, player.Discard(rand.Intn(len(player.Hand)-1)+1))
 	player.Hand = append(player.Hand, table.SabaccDeck.Deal(1)...)
 	player.UpdateHandValue()
