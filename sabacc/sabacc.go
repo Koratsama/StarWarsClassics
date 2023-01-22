@@ -116,6 +116,8 @@ func Round(table *table.Table) {
 				if table.Players[i].AllIn {
 					fmt.Printf("\n%v is all in already.\n", table.Players[i].Name)
 					continue
+				} else if table.MaxBet != 0 && table.Players[i].Bet == table.MaxBet {
+					continue
 				}
 				fmt.Printf("\nThe discard pile [%v] is: %v", len(table.DiscardPile), table.DiscardPile[len(table.DiscardPile)-1])
 				fmt.Printf("\n%v's hand is: %v", table.Players[i].Name, table.Players[i].Hand)
