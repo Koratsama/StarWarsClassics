@@ -125,10 +125,10 @@ func (re *Player) UpdateHandValue() {
 			re.HandSubCategory = "Squadron"
 			re.HandRank = 7
 		} else if isGeeWhiz(hand) {
-			re.HandSubCategory = "Gee Whiz!"
+			re.HandSubCategory = "Gee Whiz"
 			re.HandRank = 8
 		} else if isStraightStaves(hand) {
-			re.HandSubCategory = "Straight Staves!"
+			re.HandSubCategory = "Straight Staves"
 			re.HandRank = 9
 		} else if isBanthasWild(hand) {
 			re.HandSubCategory = "Banthas Wild"
@@ -200,11 +200,12 @@ func isFleet(hand []deck.Card) bool {
 			} else if hand[i].Value != 0 {
 				if fourOfAKindValue == 0 {
 					fourOfAKindValue = int(math.Abs(float64(hand[i].Value)))
+					fourOfAKind++
 				} else if fourOfAKindValue != 0 && int(math.Abs(float64(hand[i].Value))) != fourOfAKindValue {
 					return false
+				} else {
+					fourOfAKind++
 				}
-			} else {
-				fourOfAKind++
 			}
 		}
 	}
@@ -260,11 +261,12 @@ func isYeeHaa(hand []deck.Card) bool {
 			} else if hand[i].Value != 0 {
 				if pairValue == 0 {
 					pairValue = int(math.Abs(float64(hand[i].Value)))
+					pair++
 				} else if pairValue != 0 && int(math.Abs(float64(hand[i].Value))) != pairValue {
 					return false
+				} else {
+					pair++
 				}
-			} else {
-				pair++
 			}
 		}
 	}
@@ -290,12 +292,10 @@ func isRhylet(hand []deck.Card) bool {
 			if threeOfAKindValue == 0 {
 				threeOfAKindValue = hand[i].Value
 				threeOfAKind++
-			}
-			if pairValue == 0 && hand[i].Value != threeOfAKindValue {
+			} else if pairValue == 0 && hand[i].Value != threeOfAKindValue {
 				pairValue = hand[i].Value
 				pair++
-			}
-			if hand[i].Value != threeOfAKindValue || hand[i].Value != pairValue {
+			} else if hand[i].Value != threeOfAKindValue && hand[i].Value != pairValue {
 				return false
 			} else if hand[i].Value == threeOfAKindValue {
 				threeOfAKind++
@@ -324,11 +324,12 @@ func isSquadron(hand []deck.Card) bool {
 			if hand[i].Value != 0 {
 				if fourOfAKindValue == 0 {
 					fourOfAKindValue = int(math.Abs(float64(hand[i].Value)))
+					fourOfAKind++
 				} else if fourOfAKindValue != 0 && int(math.Abs(float64(hand[i].Value))) != fourOfAKindValue {
 					return false
+				} else {
+					fourOfAKind++
 				}
-			} else {
-				fourOfAKind++
 			}
 		}
 	}
@@ -419,7 +420,7 @@ func isBanthasWild(hand []deck.Card) bool {
 
 	valueMap := make(map[int]int)
 
-	if len(hand) < 3 {
+	if len(hand) < 4 {
 		return false
 	} else {
 		for i := range hand {
@@ -440,15 +441,15 @@ func isRuleOfTwo(hand []deck.Card) bool {
 	valueMap := make(map[int]int)
 	numOfPairs := 0
 
-	if len(hand) < 3 {
+	if len(hand) < 4 {
 		return false
 	} else {
 		for i := range hand {
 			valueMap[int(math.Abs(float64(hand[i].Value)))]++
 		}
 
-		for i := range hand {
-			if valueMap[int(math.Abs(float64(hand[i].Value)))] == 2 {
+		for i := range valueMap {
+			if valueMap[i] == 2 {
 				numOfPairs++
 			}
 		}

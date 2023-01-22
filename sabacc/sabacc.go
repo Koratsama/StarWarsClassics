@@ -49,21 +49,8 @@ func Start() {
 		fmt.Printf("\nThere are %v cards left in the deck.", len(table.SabaccDeck.Cards))
 		//show hands
 		//decide winner
-		var winner player.Player = table.Players[0]
-		for _, player := range table.Players {
-			if len(player.Hand) >= 2 {
-				if int(math.Abs(float64(player.HandValue))) == int(math.Abs(float64(winner.HandValue))) {
-					//figure out who wins with hand rules
-					winner = decideWinner(winner, player)
-				} else if int(math.Abs(float64(player.HandValue))) < int(math.Abs(float64(winner.HandValue))) {
-					winner = player
-				}
-			}
-			if len(player.Hand) != 0 {
-				fmt.Printf("\n%v's hand total is: %v - %v", player.Name, player.HandValue, player.Hand)
-			}
-			player.FoldHand()
-		}
+		var winner = DecideWinner(&table)
+
 		fmt.Printf("\n\n%v wins %v credits!! \nTheir hand is: %v - %v", winner.Name, table.MainPot, winner.HandCategory, winner.Hand)
 		fmt.Printf("\nTheir hand value is: %v \nThe subCategory was %v", winner.HandValue, winner.HandSubCategory)
 		//TODO: award pot to the winner
@@ -399,7 +386,7 @@ func endBetting(table *table.Table) bool {
 	return true
 }
 
-func decideWinner(currentWinner player.Player, nextPlayer player.Player) player.Player {
+func decideMatchup(currentWinner player.Player, nextPlayer player.Player) player.Player {
 
 	//TODO: logic to decide real winner if there is a tie
 	if currentWinner.HandRank < nextPlayer.HandRank {
@@ -473,4 +460,23 @@ func decideWinner(currentWinner player.Player, nextPlayer player.Player) player.
 		//implement single blind draw
 		return currentWinner
 	}
+}
+
+func DecideWinner(table *table.Table) player.Player {
+	var tempWinner player.Player = table.Players[0]
+	for _, player := range table.Players {
+		if len(player.Hand) >= 2 {
+			if int(math.Abs(float64(player.HandValue))) == int(math.Abs(float64(tempWinner.HandValue))) {
+				//figure out who wins with hand rules
+				tempWinner = decideMatchup(tempWinner, player)
+			} else if int(math.Abs(float64(player.HandValue))) < int(math.Abs(float64(tempWinner.HandValue))) {
+				tempWinner = player
+			}
+		}
+		if len(player.Hand) != 0 {
+			fmt.Printf("\n%v's hand total is: %v - %v", player.Name, player.HandValue, player.Hand)
+		}
+		player.FoldHand()
+	}
+	return tempWinner
 }
