@@ -83,3 +83,17 @@ func (re *Table) SeatPlayers() {
 		re.Players = append(re.Players, player)
 	}
 }
+
+func (re *Table) UpdatePlayers() {
+	var newPlayers []player.Player
+	for i := 0; i < len(re.Players); i++ {
+		re.Players[i].Hand = make([]deck.Card, 2)
+		re.Players[i].AllIn = false
+		if re.Players[i].Credits != 0 {
+			newPlayers = append(newPlayers, re.Players[i])
+		} else {
+			continue
+		}
+	}
+	re.Players = newPlayers
+}
