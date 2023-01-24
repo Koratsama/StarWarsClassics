@@ -25,6 +25,7 @@ func Start() {
 
 	for !gameOver {
 
+		PayAnte(&table)
 		//implement round 1
 		Round(&table)
 		//sabacc shift
@@ -51,11 +52,15 @@ func Start() {
 		//decide winner
 		var winner = DecideWinner(&table)
 
-		fmt.Printf("\n\n%v wins %v credits!! \nTheir hand is: %v - %v", winner.Name, table.MainPot, winner.HandCategory, winner.Hand)
-		fmt.Printf("\nTheir hand value is: %v \nThe subCategory was %v", winner.HandValue, winner.HandSubCategory)
-		//TODO: award pot to the winner
+		//award pot to the winner
+		payWinner(&table, winner)
+		//reset table
+		ResetTable(&table)
 
-		gameOver = true
+		if table.Players[0].Name != "Player 1" {
+			fmt.Printf("\nYou're out of credits!!!\n")
+			gameOver = true
+		}
 	}
 }
 
@@ -374,7 +379,7 @@ func Fold(table *table.Table, player *player.Player) {
 func endBetting(table *table.Table) bool {
 	//check if all players have either folded or bet matches the maximum bet.
 	for _, player := range table.Players {
-		if !(len(player.Hand) == 0) && player.Bet != table.MaxBet {
+		if len(player.Hand) != 0 && player.Bet != table.MaxBet && !player.AllIn {
 			return false
 		}
 	}
@@ -486,4 +491,39 @@ func DecideWinner(table *table.Table) player.Player {
 		player.FoldHand()
 	}
 	return tempWinner
+}
+
+func payWinner(table *table.Table, winner player.Player) {
+
+	for i := 0; i < len(table.Players); i++ {
+
+		if winner.Name == table.Players[i].Name {
+			table.Players[i].Credits += table.MainPot
+			fmt.Printf("\n\n%v wins %v credits!! \nTheir hand is: %v - %v", winner.Name, table.MainPot, winner.HandCategory, winner.Hand)
+			if winner.HandCategory == "Sabacc" {
+				table.Players[i].Credits += table.SabaccPot
+				fmt.Printf("\n\n%v also wins %v credits from the Sabacc pot!!", winner.Name, table.SabaccPot)
+				table.SabaccPot = 0
+			}
+			fmt.Printf("\nTheir hand value is: %v \nThe subCategory was %v", winner.HandValue, winner.HandSubCategory)
+		}
+	}
+}
+
+func PayAnte(table *table.Table) {
+	for i := 0; i < len(table.Players); i++ {
+		table.Players[i].Credits--
+		table.SabaccPot++
+	}
+}
+
+func ResetTable(table *table.Table) {
+	fmt.Println("Resetting the table...")
+	//time.Sleep(1 * time.Second)
+	table.MainPot = 0
+	table.SabaccDeck = deck.ShuffleDeck(deck.InitializeDeck("Sabacc"))
+	//remove any players that are out of credits
+	table.UpdatePlayers()
+	table.DealPlayers()
+	table.InitializeDiscardPile()
 }
