@@ -6,6 +6,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/Koratsama/StarWarsClassics/deck"
+	"github.com/Koratsama/StarWarsClassics/player"
 	"github.com/Koratsama/StarWarsClassics/sabacc"
 	"github.com/Koratsama/StarWarsClassics/table"
 )
@@ -205,4 +207,55 @@ func TestBetInvalidInput(t *testing.T) {
 	if err := tmpfile.Close(); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func TestPureSabacc(t *testing.T) {
+	table := table.Table{}
+	sabacc.SetupTable(&table)
+
+	for i := range table.Players {
+		table.Players[i].FoldHand()
+	}
+	//make player 1 have the best hand
+	addCardToHand(&table.Players[0], "Sylop", 0)
+	addCardToHand(&table.Players[0], "Sylop", 0)
+	//give player 2 a Rhylet
+	addCardToHand(&table.Players[1], "circle", -9)
+	addCardToHand(&table.Players[1], "square", -9)
+	addCardToHand(&table.Players[1], "square", 6)
+	addCardToHand(&table.Players[1], "circle", 6)
+	addCardToHand(&table.Players[1], "triangle", 6)
+	//make player 3 have the 1
+	addCardToHand(&table.Players[2], "triangle", -7)
+	addCardToHand(&table.Players[2], "triangle", 8)
+	addCardToHand(&table.Players[2], "circle", 9)
+	addCardToHand(&table.Players[2], "square", -10)
+	//make player 4 have the -1
+	addCardToHand(&table.Players[3], "circle", -5)
+	addCardToHand(&table.Players[3], "circle", 4)
+	//make player 5 have the 2
+	addCardToHand(&table.Players[4], "circle", -3)
+	addCardToHand(&table.Players[4], "circle", 5)
+	//make player 6 have the -2
+	addCardToHand(&table.Players[5], "circle", -7)
+	addCardToHand(&table.Players[5], "square", 5)
+
+	for i := range table.Players {
+		table.Players[i].UpdateHandValue()
+	}
+
+	winner := sabacc.DecideWinner(&table)
+
+	if winner.HandCategory != "Sabacc" || winner.HandSubCategory != "Pure Sabacc" {
+		fmt.Println("Player 1 should win with Pure Sabacc!")
+		t.Fail()
+	}
+
+}
+
+func addCardToHand(player *player.Player, stave string, value int) {
+	var card deck.Card
+	card.Stave = stave
+	card.Value = value
+	player.Hand = append(player.Hand, card)
 }

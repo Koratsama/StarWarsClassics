@@ -49,22 +49,10 @@ func Start() {
 		fmt.Printf("\nThere are %v cards left in the deck.", len(table.SabaccDeck.Cards))
 		//show hands
 		//decide winner
-		var winner player.Player = table.Players[0]
-		for _, player := range table.Players {
-			if len(player.Hand) >= 2 {
-				if int(math.Abs(float64(player.HandValue))) == int(math.Abs(float64(winner.HandValue))) {
-					//figure out who wins with hand rules
-					winner = decideWinner(winner, player)
-				} else if int(math.Abs(float64(player.HandValue))) < int(math.Abs(float64(winner.HandValue))) {
-					winner = player
-				}
-			}
-			if len(player.Hand) != 0 {
-				fmt.Printf("\n%v's hand total is: %v - %v", player.Name, player.HandValue, player.Hand)
-			}
-			player.FoldHand()
-		}
-		fmt.Printf("\n%v wins!! hand total is: %v - %v", winner.Name, winner.HandValue, winner.Hand)
+		var winner = DecideWinner(&table)
+
+		fmt.Printf("\n\n%v wins %v credits!! \nTheir hand is: %v - %v", winner.Name, table.MainPot, winner.HandCategory, winner.Hand)
+		fmt.Printf("\nTheir hand value is: %v \nThe subCategory was %v", winner.HandValue, winner.HandSubCategory)
 		//TODO: award pot to the winner
 
 		gameOver = true
@@ -115,9 +103,9 @@ func Round(table *table.Table) {
 	for i := 0; i < len(table.Players); i++ {
 		if len(table.Players[i].Hand) != 0 {
 			fmt.Printf("\nThe discard pile [%v] is: %v", len(table.DiscardPile), table.DiscardPile[len(table.DiscardPile)-1])
-			fmt.Printf("\n%v's hand is: %v", table.Players[i].Name, table.Players[i].Hand)
+			fmt.Printf("\n%v's hand is: %v\n", table.Players[i].Name, table.Players[i].Hand)
 			Action(table, &table.Players[i])
-			fmt.Printf("\n%v's hand is: %v", table.Players[i].Name, table.Players[i].Hand)
+			fmt.Printf("\n%v's hand is: %v\n", table.Players[i].Name, table.Players[i].Hand)
 		}
 	}
 
@@ -128,10 +116,12 @@ func Round(table *table.Table) {
 				if table.Players[i].AllIn {
 					fmt.Printf("\n%v is all in already.\n", table.Players[i].Name)
 					continue
+				} else if table.MaxBet != 0 && table.Players[i].Bet == table.MaxBet {
+					continue
 				}
 				fmt.Printf("\nThe discard pile [%v] is: %v", len(table.DiscardPile), table.DiscardPile[len(table.DiscardPile)-1])
 				fmt.Printf("\n%v's hand is: %v", table.Players[i].Name, table.Players[i].Hand)
-				fmt.Printf("\nCurrent bet is: %v", table.MaxBet)
+				fmt.Printf("\nCurrent bet is: %v, %v's bet is: %v", table.MaxBet, table.Players[i].Name, table.Players[i].Bet)
 				BetAction(table, &table.Players[i])
 			}
 		}
@@ -155,8 +145,7 @@ func SabaccShift(table *table.Table) {
 		for i := 0; i < len(table.Players); i++ {
 			var handSize int = len(table.Players[i].Hand)
 			if handSize != 0 {
-				table.DiscardPile = append(table.DiscardPile, table.Players[i].Discard(handSize))
-				//table.Players[i].Discard(handSize)
+				table.DiscardPile = append(table.DiscardPile, table.Players[i].FoldHand()...)
 				table.Players[i].Hand = table.SabaccDeck.Deal(handSize)
 				table.Players[i].UpdateHandValue()
 			}
@@ -179,8 +168,6 @@ func Action(table *table.Table, player *player.Player) {
 	for !endAction {
 		var choice string
 		endAction = true
-		t := time.Now()
-		rand.Seed(int64(t.Nanosecond()))
 		fmt.Println("\n1. Gain\n2. Discard\n3. Swap\n4. Stand" +
 			"\nPlease select an action:")
 
@@ -222,6 +209,9 @@ Parameters: table, player - reference to the current table and player taking act
 */
 func Discard(table *table.Table, player *player.Player) {
 	//TODO: choose which card you want to discard.
+	t := time.Now()
+	rand.Seed(int64(t.Nanosecond()))
+
 	table.DiscardPile = append(table.DiscardPile, player.Discard(rand.Intn(len(player.Hand)-1)+1))
 	player.Hand = append(player.Hand, table.SabaccDeck.Deal(1)...)
 	player.UpdateHandValue()
@@ -249,6 +239,7 @@ Parameters: table, player - reference to the current table and player taking act
 */
 func Stand(table *table.Table, player *player.Player) {
 	fmt.Printf("%v stands\n", player.Name)
+	player.UpdateHandValue()
 }
 
 /*
@@ -264,8 +255,6 @@ func BetAction(table *table.Table, player *player.Player) {
 		var choice string
 		endBet = true
 
-		t := time.Now()
-		rand.Seed(int64(t.Nanosecond()))
 		fmt.Println("\n1. Bet\n2. Check\n3. Fold" +
 			"\nPlease select an action:")
 
@@ -397,8 +386,104 @@ func endBetting(table *table.Table) bool {
 	return true
 }
 
-func decideWinner(currentWinner player.Player, nextPlayer player.Player) player.Player {
+func decideMatchup(currentWinner player.Player, nextPlayer player.Player) player.Player {
 
 	//TODO: logic to decide real winner if there is a tie
-	return currentWinner
+	if currentWinner.HandRank < nextPlayer.HandRank {
+		return currentWinner
+	} else if currentWinner.HandRank > nextPlayer.HandRank {
+		return nextPlayer
+	} else {
+		if currentWinner.HandCategory == "Nulrhek" && nextPlayer.HandCategory == "Nulrhek" {
+			//positive score
+			if int(math.Abs(float64(currentWinner.HandValue))) < int(math.Abs(float64(nextPlayer.HandValue))) {
+				return currentWinner
+			} else if int(math.Abs(float64(currentWinner.HandValue))) > int(math.Abs(float64(nextPlayer.HandValue))) {
+				return nextPlayer
+			} else if int(math.Abs(float64(currentWinner.HandValue))) == int(math.Abs(float64(nextPlayer.HandValue))) {
+				if currentWinner.HandValue > 0 && nextPlayer.HandValue < 0 {
+					return currentWinner
+				} else if currentWinner.HandValue < 0 && nextPlayer.HandValue > 0 {
+					return nextPlayer
+				} else {
+					//positive score with most cards
+					if currentWinner.PositiveCards > nextPlayer.PositiveCards {
+						return currentWinner
+					} else if currentWinner.PositiveCards < nextPlayer.PositiveCards {
+						return nextPlayer
+					} else {
+						//positive score with the highest total value of all positive cards
+						if currentWinner.PositiveCardTotal > nextPlayer.PositiveCardTotal {
+							return currentWinner
+						} else if currentWinner.PositiveCardTotal < nextPlayer.PositiveCardTotal {
+							return nextPlayer
+						} else {
+							//positive score with the highest single positive card value
+							if currentWinner.HighestPositiveCard.Value > nextPlayer.HighestPositiveCard.Value {
+								return currentWinner
+							} else if currentWinner.HighestPositiveCard.Value < nextPlayer.HighestPositiveCard.Value {
+								return nextPlayer
+							} else {
+								//implement single blind draw
+								return currentWinner
+							}
+						}
+					}
+				}
+			}
+		} else if (currentWinner.HandCategory == "Sabbac" && nextPlayer.HandCategory == "Sabbac") &&
+			currentWinner.HandSubCategory == nextPlayer.HandSubCategory {
+			//most cards
+			if len(currentWinner.Hand) > len(nextPlayer.Hand) {
+				return currentWinner
+			} else if len(currentWinner.Hand) < len(nextPlayer.Hand) {
+				return nextPlayer
+			} else {
+				//hightest total value of all positive cards
+				if currentWinner.PositiveCardTotal > nextPlayer.PositiveCardTotal {
+					return currentWinner
+				} else if currentWinner.PositiveCardTotal < nextPlayer.PositiveCardTotal {
+					return nextPlayer
+				} else {
+					//highest single positive card value
+					if currentWinner.HighestPositiveCard.Value > nextPlayer.HighestPositiveCard.Value {
+						return currentWinner
+					} else if currentWinner.HighestPositiveCard.Value < nextPlayer.HighestPositiveCard.Value {
+						return nextPlayer
+					} else {
+						//implement single blind draw
+						return currentWinner
+					}
+				}
+			}
+		}
+		//implement single blind draw
+		return currentWinner
+	}
+}
+
+/*
+Name: DecideWinner
+Purpose: The purpose of this function is to loop through the table and figure out
+which player has the best hand. This is done by comparing each player with the next and
+setting the current winner to whoever wins the matchup.
+Parameters: table, player - reference to the current table and player taking action.
+*/
+func DecideWinner(table *table.Table) player.Player {
+	var tempWinner player.Player = table.Players[0]
+	for _, player := range table.Players {
+		if len(player.Hand) >= 2 {
+			if int(math.Abs(float64(player.HandValue))) == int(math.Abs(float64(tempWinner.HandValue))) {
+				//figure out who wins with hand rules
+				tempWinner = decideMatchup(tempWinner, player)
+			} else if int(math.Abs(float64(player.HandValue))) < int(math.Abs(float64(tempWinner.HandValue))) {
+				tempWinner = player
+			}
+		}
+		if len(player.Hand) != 0 {
+			fmt.Printf("\n%v's hand total is: %v - %v", player.Name, player.HandValue, player.Hand)
+		}
+		player.FoldHand()
+	}
+	return tempWinner
 }
