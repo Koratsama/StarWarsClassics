@@ -147,6 +147,7 @@ func (re *Player) UpdateHandValue() {
 	}
 }
 
+// hand with two sylops, no other cards
 func isPureSabacc(hand []deck.Card) bool {
 
 	if len(hand) == 2 && hand[0].Value == 0 && hand[1].Value == 0 {
@@ -156,6 +157,7 @@ func isPureSabacc(hand []deck.Card) bool {
 	}
 }
 
+// hand with 2 positive tens, 2 negative tens, 1 sylop
 func isFullSabacc(hand []deck.Card) bool {
 
 	positiveTens := 0
@@ -185,6 +187,7 @@ func isFullSabacc(hand []deck.Card) bool {
 	}
 }
 
+// hand with four of a kind and 1 sylop, no tens
 func isFleet(hand []deck.Card) bool {
 	//four of a kind with a sylop
 	fourOfAKindValue := 0
@@ -217,6 +220,7 @@ func isFleet(hand []deck.Card) bool {
 	}
 }
 
+// hand with a sylop and a pair of tens
 func isPrimeSabacc(hand []deck.Card) bool {
 
 	positiveTens := 0
@@ -246,6 +250,7 @@ func isPrimeSabacc(hand []deck.Card) bool {
 	}
 }
 
+// hand with a sylop and a pair that aren't tens
 func isYeeHaa(hand []deck.Card) bool {
 	//pair with a sylop
 	pairValue := 0
@@ -278,6 +283,7 @@ func isYeeHaa(hand []deck.Card) bool {
 	}
 }
 
+// hand with positive 3 of a kind and negative pair or vice versa
 func isRhylet(hand []deck.Card) bool {
 	//four of a kind with a sylop
 	threeOfAKindValue := 0
@@ -312,6 +318,7 @@ func isRhylet(hand []deck.Card) bool {
 	}
 }
 
+// four of a kind totaling zero
 func isSquadron(hand []deck.Card) bool {
 	//four of a kind without a sylop
 	fourOfAKindValue := 0
@@ -341,6 +348,7 @@ func isSquadron(hand []deck.Card) bool {
 	}
 }
 
+// 1,2,3,4 & -10 or -1,-2,-3,-4 & 10
 func isGeeWhiz(hand []deck.Card) bool {
 	// 1,2,3,4 and -10
 	positiveOne := false
@@ -394,6 +402,7 @@ func isGeeWhiz(hand []deck.Card) bool {
 	}
 }
 
+// hand with a sequential run of four cards totaling zero
 func isStraightStaves(hand []deck.Card) bool {
 	//fix this, try sorting instead
 
@@ -416,6 +425,7 @@ func isStraightStaves(hand []deck.Card) bool {
 	}
 }
 
+// 3 of a kind plus 1 or 2 other cards totaling zero
 func isBanthasWild(hand []deck.Card) bool {
 
 	valueMap := make(map[int]int)
@@ -436,6 +446,7 @@ func isBanthasWild(hand []deck.Card) bool {
 	return false
 }
 
+// two pairs with a hand value of zero.
 func isRuleOfTwo(hand []deck.Card) bool {
 
 	valueMap := make(map[int]int)
