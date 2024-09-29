@@ -484,6 +484,13 @@ func decideMatchup(currentWinner player.Player, nextPlayer player.Player) player
 	}
 }
 
+/*
+Name: DecideWinner
+Purpose: The purpose of this function is to loop through the table and figure out
+which player has the best hand. This is done by comparing each player with the next and
+setting the current winner to whoever wins the matchup.
+Parameters: table, player - reference to the current table and player taking action.
+*/
 func DecideWinner(table *table.Table) player.Player {
 	var tempWinner player.Player = table.Players[0]
 	for _, player := range table.Players {
