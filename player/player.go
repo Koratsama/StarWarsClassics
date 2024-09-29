@@ -2,6 +2,7 @@ package player
 
 import (
 	"math"
+	"math/rand"
 	"sort"
 
 	"github.com/Koratsama/StarWarsClassics/deck"
@@ -22,6 +23,27 @@ type Player struct {
 	PositiveCards       int
 	PositiveCardTotal   int
 	HighestPositiveCard deck.Card
+	Skill    			int
+    Charisma 			int
+    Risk     			int
+    Cheat    			int
+    Drunk    			int
+    Anger    			int
+}
+
+func PreMadeCharacters() []Player {
+    return []Player{
+            {Name: "Han Solo", Credits: 1000, Hand: make([]deck.Card, 2), Skill: 90, Charisma: 80, Risk: 70, Cheat: 60, Drunk: 20, Anger: 30},
+            {Name: "Chewbacca", Credits: 1000, Hand: make([]deck.Card, 2), Skill: 70, Charisma: 50, Risk: 60, Cheat: 10, Drunk: 10, Anger: 40},
+            {Name: "Boba Fett", Credits: 1000, Hand: make([]deck.Card, 2), Skill: 85, Charisma: 40, Risk: 80, Cheat: 70, Drunk: 10, Anger: 50},
+            {Name: "Jabba the Hutt", Credits: 1000, Hand: make([]deck.Card, 2), Skill: 60, Charisma: 30, Risk: 50, Cheat: 80, Drunk: 50, Anger: 60},
+            {Name: "Darth Vader", Credits: 1000, Hand: make([]deck.Card, 2), Skill: 95, Charisma: 70, Risk: 90, Cheat: 50, Drunk: 10, Anger: 80},
+            {Name: "Obi-wan Kenobi", Credits: 1000, Hand: make([]deck.Card, 2), Skill: 90, Charisma: 80, Risk: 60, Cheat: 20, Drunk: 10, Anger: 20},
+            {Name: "C-3PO", Credits: 1000, Hand: make([]deck.Card, 2), Skill: 50, Charisma: 90, Risk: 30, Cheat: 10, Drunk: 0, Anger: 10},
+            {Name: "R2D2", Credits: 1000, Hand: make([]deck.Card, 2), Skill: 70, Charisma: 60, Risk: 50, Cheat: 20, Drunk: 0, Anger: 20},
+            {Name: "Bossk", Credits: 1000, Hand: make([]deck.Card, 2), Skill: 80, Charisma: 40, Risk: 70, Cheat: 60, Drunk: 20, Anger: 50},
+            {Name: "Lando Calrissian", Credits: 1000, Hand: make([]deck.Card, 2), Skill: 85, Charisma: 90, Risk: 75, Cheat: 50, Drunk: 30, Anger: 40},
+        }
 }
 
 /*
@@ -66,6 +88,121 @@ Parameters: None
 */
 func (re *Player) RemoveLastCard() []deck.Card {
 	return re.Hand[:len(re.Hand)-1]
+}
+
+/*
+Name: DecideAction
+Purpose: The purpose of this function is to simulate a player making a decision based on
+their attributes and current hand value. This function will return a string that represents the decision that the
+player has made. The decision can be one of the following: Gain, Discard, Swap, Stand, or cheat.
+Attributes:
+- Skill: The player's skill level. Higher skill means better decision making.
+- Charisma: The player's charisma level. Higher Charisma means more chatty.
+- Risk: The player's risk level. Higher risk means more unpredictable.
+- Cheat: The player's cheat level. Higher cheat means more likely to know another player's hand.
+- Drunk: The player's drunk level. Hugher drunk means less likely to make good decisions. can change throughout a game.
+- Anger: The player's anger level. Higher anger means more likely to make aggressive decisions.
+*/
+func (p *Player) DecideAction() string {
+    
+    decision := "Stand"
+
+    // Calculate a decision score based on attributes and hand value
+	//TODO: change this later
+    score := p.Skill + p.Charisma - p.Drunk + p.Risk - p.Anger
+
+    // Random factor to simulate unpredictability
+    randomFactor := rand.Intn(100)
+
+    // Example logic to decide based on score and random factor
+    if score+randomFactor > 150 {
+        decision = "Swap"
+    } else if score+randomFactor > 100 {
+        decision = "Gain"
+    } else if score+randomFactor > 50 {
+		decision = "Discard"
+	}
+
+    // TODO: Implement cheating logic
+    // if p.Cheat > 50 && rand.Intn(100) < p.Cheat {
+    //     decision = "Cheat"
+    // }
+
+    return decision
+}
+
+/*
+Name: DecideBettingAction
+Purpose: The purpose of this function is to simulate a player making a bet decision based on
+their attributes and current hand value. This function will return a string that represents the decision that the
+player has made. The decision can be one of the following: Bet, Check, Fold.
+Attributes:
+- Skill: The player's skill level. Higher skill means better decision making.
+- Charisma: The player's charisma level. Higher Charisma means more chatty.
+- Risk: The player's risk level. Higher risk means more unpredictable.
+- Cheat: The player's cheat level. Higher cheat means more likely to know another player's hand.
+- Drunk: The player's drunk level. Hugher drunk means less likely to make good decisions. can change throughout a game.
+- Anger: The player's anger level. Higher anger means more likely to make aggressive decisions.
+*/
+func (p *Player) DecideBetAction() string {
+    
+    decision := "Fold"
+
+    // Calculate a decision score based on attributes and hand value
+	//TODO: change this later
+    score := p.Skill + p.Charisma - p.Drunk + p.Risk - p.Anger
+
+    // Random factor to simulate unpredictability
+    randomFactor := rand.Intn(100)
+
+    // Example logic to decide based on score and random factor
+    if score+randomFactor > 150 {
+        decision = "Bet"
+    } else if score+randomFactor > 100 {
+        decision = "Check"
+    } 
+
+    return decision
+}
+
+/*
+Name: DecideBetAmount
+Purpose: The purpose of this function is to simulate a player deciding the bet amount based on
+their attributes and current hand value. This function will return an integer that represents the bet amount.
+Attributes:
+- Skill: The player's skill level. Higher skill means better decision making.
+- Risk: The player's risk level. Higher risk means more unpredictable.
+- Drunk: The player's drunk level. Higher drunk means less likely to make good decisions.
+- Anger: The player's anger level. Higher anger means more likely to make aggressive decisions.
+- HandValue: The value of the player's current hand.
+*/
+func (p *Player) DecideBetAmount(currentBet int) int {
+    // Base bet amount
+    baseBet := 10
+
+    // Calculate a bet multiplier based on attributes and hand value
+    multiplier := float64(p.Skill)/100 + float64(p.Risk)/100 - float64(p.Drunk)/200 + float64(p.HandValue)/100 - float64(p.Anger)/200
+
+    // Random factor to simulate unpredictability
+    randomFactor := rand.Float64()
+
+    // Calculate the final bet amount
+    betAmount := int(float64(baseBet) * multiplier * (1 + randomFactor))
+
+    // Ensure the bet amount is at least the base bet
+    if betAmount < baseBet {
+        betAmount = baseBet
+    }
+
+	if (betAmount < currentBet) {
+		betAmount = currentBet
+	}
+    // Ensure the bet amount does not exceed the player's credits
+    if betAmount > p.Credits {
+        betAmount = p.Credits
+    }
+
+    return betAmount
 }
 
 /*

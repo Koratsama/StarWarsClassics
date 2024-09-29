@@ -2,7 +2,7 @@ package table
 
 import (
 	"fmt"
-	"strconv"
+	"math/rand"
 
 	"github.com/Koratsama/StarWarsClassics/deck"
 	"github.com/Koratsama/StarWarsClassics/dice"
@@ -41,6 +41,23 @@ func (re *Table) CheckPlayerStatus() bool {
 }
 
 /*
+Name: CheckPlayer1Credits
+Purpose: This function iterates through the list of players to find Player 1 and checks if they are out of credits.
+Returns: bool - true if Player 1 is out of credits, false otherwise.
+*/
+func (re *Table) CheckP1Credits() bool {
+    for _, p := range re.Players {
+        if p.Name == "Player 1" {
+            if p.Credits <= 0 {
+                return true
+            }
+            break
+        }
+    }
+    return false
+}
+
+/*
 Name: DealPlayers
 Purpose: The DealPlayers function deals 2 cards from the top of the
 table deck and sets them to each players initial hand for that round.
@@ -75,13 +92,26 @@ instantiates their hands and total credits to 300.
 Parameters: table - reference to the games table
 */
 func (re *Table) SeatPlayers() {
-	for i := 1; i < 7; i++ {
-		player := player.Player{}
-		player.Name = "Player " + strconv.Itoa(i)
-		player.Credits = 300
-		player.Hand = make([]deck.Card, 2)
-		re.Players = append(re.Players, player)
-	}
+
+	var characters = player.PreMadeCharacters()
+	// Shuffle the characters
+    rand.Shuffle(len(characters), func(i, j int) {
+        characters[i], characters[j] = characters[j], characters[i]
+    })
+	// Select 3 random characters
+    selectedCharacters := characters[:3]
+	// Create Player 1
+    player1 := player.Player{
+        Name:    "Player 1",
+        Credits: 1000,
+        Hand:    make([]deck.Card, 2),
+    }
+    // Generate a random index to insert Player 1
+    randomIndex := rand.Intn(4) // Random index between 0 and 3
+    // Insert Player 1 at the random index
+    selectedCharacters = append(selectedCharacters[:randomIndex], append([]player.Player{player1}, selectedCharacters[randomIndex:]...)...)
+	// Add the selected characters (including Player 1) to the table
+    re.Players = append(re.Players, selectedCharacters...)
 }
 
 func (re *Table) UpdatePlayers() {

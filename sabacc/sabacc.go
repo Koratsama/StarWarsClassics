@@ -57,10 +57,7 @@ func Start() {
 		//reset table
 		ResetTable(&table)
 
-		if table.Players[0].Name != "Player 1" {
-			fmt.Printf("\nYou're out of credits!!!\n")
-			gameOver = true
-		}
+		gameOver = table.CheckPlayerStatus()
 	}
 }
 
@@ -175,10 +172,15 @@ func Action(table *table.Table, player *player.Player) {
 		endAction = true
 		t := time.Now()
 		rand.Seed(int64(t.Nanosecond()))
-		fmt.Println("\n1. Gain\n2. Discard\n3. Swap\n4. Stand" +
+
+		if (player.Name == "Player 1") {
+			fmt.Println("\n1. Gain\n2. Discard\n3. Swap\n4. Stand" +
 			"\nPlease select an action:")
 
-		fmt.Scanf("%s\n", &choice)
+			fmt.Scanf("%s\n", &choice)
+		} else {
+			choice = player.DecideAction()
+		}
 
 		switch choice {
 		case "1", "Gain", "gain":
@@ -264,10 +266,15 @@ func BetAction(table *table.Table, player *player.Player) {
 
 		t := time.Now()
 		rand.Seed(int64(t.Nanosecond()))
-		fmt.Println("\n1. Bet\n2. Check\n3. Fold" +
+
+		if (player.Name == "Player 1") { 
+			fmt.Println("\n1. Bet\n2. Check\n3. Fold" +
 			"\nPlease select an action:")
 
-		fmt.Scanf("%s\n", &choice)
+			fmt.Scanf("%s\n", &choice)
+		} else {
+			choice = player.DecideBetAction()
+		}
 
 		switch choice {
 		case "1", "Bet", "bet":
@@ -295,36 +302,42 @@ Returns: flag to indicate if player betting action is over.
 */
 func Bet(table *table.Table, player *player.Player) bool {
 	var bet int
-	fmt.Println("\nPlease select an amount to bet:")
 
-	_, err := fmt.Scanf("%d\n", &bet)
-	if err != nil {
-		//log.Fatalln(err)
-		fmt.Printf("Error reading user input... choose again.\n")
-		return false
+	if (player.Name == "Player 1") {
+		fmt.Println("\nPlease select an amount to bet:")
+
+		_, err := fmt.Scanf("%d\n", &bet)
+		if err != nil {
+			//log.Fatalln(err)
+			fmt.Printf("Error reading user input... choose again.\n")
+			return false
+		}
+	} else {
+		bet = player.DecideBetAmount(table.MaxBet)
 	}
+
 
 	if bet < table.MaxBet {
 		if bet > player.Bet+player.Credits {
-			fmt.Printf("%v does not have enough credits to bet %v. Total Credits: %v\n", player.Name, bet, player.Bet+player.Credits)
+			fmt.Printf("\n%v does not have enough credits to bet %v. Total Credits: %v\n", player.Name, bet, player.Bet+player.Credits)
 			return false
 		} else if bet < player.Bet+player.Credits {
-			fmt.Printf("%v did not bet the minimum required: %v\n", player.Name, table.MaxBet)
+			fmt.Printf("\n%v did not bet the minimum required: %v\n", player.Name, table.MaxBet)
 			return false
 		} else if bet == player.Bet+player.Credits {
-			fmt.Printf("%v called with %v credits\n", player.Name, bet)
-			fmt.Printf("%v is all in!\n", player.Name)
+			fmt.Printf("\n%v called with %v credits\n", player.Name, bet)
+			fmt.Printf("\n%v is all in!\n", player.Name)
 			player.AllIn = true
 		}
 	}
 	if bet == table.MaxBet {
 		if bet > player.Bet+player.Credits {
-			fmt.Printf("%v does not have enough credits to bet %v. Total Credits: %v\n", player.Name, bet, player.Bet+player.Credits)
+			fmt.Printf("\n%v does not have enough credits to bet %v. Total Credits: %v\n", player.Name, bet, player.Bet+player.Credits)
 			return false
 		} else {
-			fmt.Printf("%v called with %v credits\n", player.Name, bet)
+			fmt.Printf("\n%v called with %v credits\n", player.Name, bet)
 			if bet == player.Bet+player.Credits {
-				fmt.Printf("%v is all in!\n", player.Name)
+				fmt.Printf("\n%v is all in!\n", player.Name)
 				player.AllIn = true
 			}
 		}
@@ -337,7 +350,7 @@ func Bet(table *table.Table, player *player.Player) bool {
 			fmt.Printf("%v does not have enough credits to bet %v. Total Credits: %v\n", player.Name, bet, player.Bet+player.Credits)
 			return false
 		}
-		fmt.Printf("%v bet %v credits\n", player.Name, bet)
+		fmt.Printf("\n%v bet %v credits\n", player.Name, bet)
 		if bet == player.Bet+player.Credits {
 			fmt.Printf("%v is all in!\n", player.Name)
 			player.AllIn = true
@@ -360,10 +373,10 @@ Returns: flag to indicate if player betting action is over.
 */
 func Check(table *table.Table, player *player.Player) bool {
 	if table.MaxBet == player.Bet {
-		fmt.Printf("%v checks\n", player.Name)
+		fmt.Printf("\n%v checks\n", player.Name)
 		return true
 	} else {
-		fmt.Printf("%v cannot check\n", player.Name)
+		fmt.Printf("\n%v cannot check\n", player.Name)
 		return false
 	}
 }
@@ -515,7 +528,7 @@ func PayAnte(table *table.Table) {
 }
 
 func ResetTable(table *table.Table) {
-	fmt.Println("Resetting the table...")
+	fmt.Println("\nResetting the table...")
 	//time.Sleep(1 * time.Second)
 	table.MainPot = 0
 	table.SabaccDeck = deck.ShuffleDeck(deck.InitializeDeck("Sabacc"))
